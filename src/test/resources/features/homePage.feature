@@ -45,6 +45,21 @@ Feature:As a job seeker
       | Analyst          | Bristol         |
 
 
+  Scenario Outline: Search for valid criteria, check and click if back to search results link is displayed
+    When I enter "<keyword>" in job title and "<locationkeyword>" in location and click search
+    Then I should see only the results matching "<keyword>" in "<locationkeyword>" in a new page
+    And I click back to search
+    Then I should see homepage with options to search for location and keyword
+    When I enter "<keyword>" in job title and "<locationkeyword>" in location and click search
+    Then I should see only the results matching "<keyword>" in "<locationkeyword>" in a new page
+    When I select a job that matches my criteria
+    Then I should see back to search results
+    And I click back to search results
+    Then I should see only the results matching "<keyword>" in "<locationkeyword>" in a new page
+    Examples:
+      | keyword | locationkeyword |
+      | web     | london          |
+
 #  Scenario Outline: Search for invalid criteria in both keyword and location to no results page displayed
 #    When I enter "<keyword>" in job title and "<locationkeyword>" in location and click search
 #   Then no jobs found is displayed

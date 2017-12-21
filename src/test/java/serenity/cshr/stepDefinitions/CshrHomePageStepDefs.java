@@ -44,10 +44,7 @@ public class CshrHomePageStepDefs {
     public void i_should_see_only_the_results_matching_in_in_a_new_page(String arg1, String arg2) {
     }
 
-    @Then("^total number of jobs matching search$")
-    public void total_number_of_jobs_matching_search() {
 
-    }
 
 
 }
