@@ -37,7 +37,7 @@ Feature:As a job seeker
     And partial job description
     And number of vaccancies, location, salary, job grade, closing date
     When I select a job that matches my criteria
-    Then I should be shown a full description of the job in a new page with salary min and max, closing date
+    Then I should be shown a full description of the job in a new page with salary min and max, closing date, Apply
     Examples:
       | keyword          | locationkeyword |
       | web              | london          |
@@ -59,6 +59,30 @@ Feature:As a job seeker
     Examples:
       | keyword | locationkeyword |
       | web     | london          |
+
+  Scenario Outline: A no search results page is dispalyed when search doesn't match any results
+    When I enter "<keyword>" in job title and "<locationkeyword>" in location and click search
+    Then I should see no results matching your search and link to navigate to home page
+    When I click the link to try a new search
+    Then I should see homepage with options to search for location and keyword
+    Examples:
+      | keyword | locationkeyword |
+      | dooooo     | sfjsjfjdf          |
+
+  Scenario Outline: An apply button is displayed on the job description page
+    When I enter "<keyword>" in job title and "<locationkeyword>" in location and click search
+    Then I should see only the results matching "<keyword>" in "<locationkeyword>" in a new page
+    When I select a job that matches my criteria
+    When I click the apply button
+    #not implementing this temporary page
+    Then I should see a temporary page
+
+    Examples:
+      | keyword | locationkeyword |
+      | web     | london          |
+
+  Scenario: I should see Welsh language option on homepage
+  Then I should see a link to welsh language
 
 #  Scenario Outline: Search for invalid criteria in both keyword and location to no results page displayed
 #    When I enter "<keyword>" in job title and "<locationkeyword>" in location and click search

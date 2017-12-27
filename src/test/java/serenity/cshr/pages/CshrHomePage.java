@@ -14,7 +14,7 @@ public class CshrHomePage extends PageObject {
         super(driver);
     }
 
-    private Dimension dimension = new Dimension(1368, 768);
+    private Dimension dimension = new Dimension(1920, 1080);
 
     @FindBy(id = "keyword")
     private WebElement keyword;
@@ -22,10 +22,14 @@ public class CshrHomePage extends PageObject {
     @FindBy(id = "location")
     private WebElement location;
 
+    @FindBy(linkText = "Cymraeg")
+    WebElement welshLanguageLink;
 
     @WhenPageOpens
     public void makeBrowserWindowFullScreen() {
-        getDriver().manage().window().setSize(dimension);
+        if(!getDriver().toString().contains("appium")) {
+            getDriver().manage().window().setSize(dimension);
+        }
     }
 
     public CshrResultsPage searchForKeyword(String searchRequest) {
@@ -48,5 +52,8 @@ public class CshrHomePage extends PageObject {
         return new CshrResultsPage(getDriver());
     }
 
+    public boolean welshLanguage(){
+       return welshLanguageLink.isDisplayed();
+    }
 
 }

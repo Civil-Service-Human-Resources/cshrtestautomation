@@ -35,17 +35,33 @@ public class CshrResultsPageStepDefs {
 
     @And("number of vaccancies, location, salary, job grade, closing date")
     public void number_of_vaccancies_location_salary_jobgrade_closing_date() {
-        cshrSearchResultsSteps.noOfVacanciesFound();
+        cshrSearchResultsSteps.noOfVacanciesFoundCount();
+        cshrSearchResultsSteps.locationFoundCount();
+        cshrSearchResultsSteps.closingDateFoundCount();
+        cshrSearchResultsSteps.jobGradeFoundCount();
+        cshrSearchResultsSteps.salaryFoundCount();
 
     }
 
     @Then("^total number of jobs matching search$")
     public void total_number_of_jobs_matching_search() {
         cshrSearchResultsSteps.noOfJobsFound();
+        cshrSearchResultsSteps.isSearchResultsCountGreaterThanZero();
     }
 
     @And("^I click back to search$")
     public void I_click_back_to_search() {
         cshrSearchResultsSteps.clickBackToSearch();
+    }
+
+    @Then("^I should see no results matching your search and link to navigate to home page$")
+    public void i_should_see_no_results_matching_your_search_and_link_to_navigate_to_home_page() {
+        cshrSearchResultsSteps.isSearchResultsCountZero();
+    }
+
+
+    @When("^I click the link to try a new search$")
+    public void i_click_the_link_to_try_a_new_search() {
+        cshrSearchResultsSteps.clickTryNewSeachLink();
     }
 }

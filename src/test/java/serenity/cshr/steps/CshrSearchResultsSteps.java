@@ -6,21 +6,44 @@ import serenity.cshr.pages.CshrResultsPage;
 
 public class CshrSearchResultsSteps {
     CshrResultsPage cshrResultsPage;
-    //CshrHomePage cshrHomePage;
 
     @Step
     public void verifyJobDescriptionExists() {
-        Assert.assertTrue(cshrResultsPage.jobDescriptionExists());
+        Assert.assertTrue(!cshrResultsPage.jobDescriptionExists().isEmpty());
     }
 
     @Step
     public void noOfJobsFound() {
-        System.out.println(cshrResultsPage.jobsDispalyed());
+        System.out.println(cshrResultsPage.searchResultsTotalNum());
     }
 
     @Step
-    public void noOfVacanciesFound() {
-        cshrResultsPage.noOfVacanciesText();
+    public void isSearchResultsCountGreaterThanZero(){
+        Assert.assertTrue(!cshrResultsPage.searchResultsTotalNum().equals("0"));
+    }
+    @Step
+    public void noOfVacanciesFoundCount() {
+        Assert.assertTrue(cshrResultsPage.listOfVacanciesNumber()>0);
+    }
+
+    @Step
+    public void closingDateFoundCount() {
+        Assert.assertTrue(cshrResultsPage.listOfClosingDateNumber()>0);
+    }
+
+    @Step
+    public void jobGradeFoundCount() {
+        Assert.assertTrue(cshrResultsPage.listOfJobGradeNumber()>0);
+    }
+
+    @Step
+    public void salaryFoundCount() {
+        Assert.assertTrue(cshrResultsPage.listOfSalaryNumber()>0);
+    }
+
+    @Step
+    public void locationFoundCount() {
+        Assert.assertTrue(cshrResultsPage.listOfLocationNumber()>0);
     }
 
     @Step
@@ -31,6 +54,16 @@ public class CshrSearchResultsSteps {
     @Step
     public void clickBackToSearch() {
         cshrResultsPage.clickBackToSearch();
+    }
+
+    @Step
+    public void isSearchResultsCountZero(){
+        Assert.assertTrue(cshrResultsPage.searchResultsTotalNum().equals("0"));
+    }
+
+    @Step
+    public void clickTryNewSeachLink(){
+        cshrResultsPage.tryNewSeach();
     }
 
 }

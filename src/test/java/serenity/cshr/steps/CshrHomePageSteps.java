@@ -1,9 +1,10 @@
 package serenity.cshr.steps;
 
 import net.thucydides.core.annotations.Step;
+import org.junit.Assert;
 import serenity.cshr.pages.CshrHomePage;
 
-public class CshrSearchSteps {
+public class CshrHomePageSteps {
 
     //CshrSearchPage searchPage;
     //CshrResultsPage resultsPage;
@@ -44,5 +45,9 @@ public class CshrSearchSteps {
         cshrHomePage.searchForKeywordAndLocation(keyword, location);
     }
 
+    @Step
+    public void welshLanguageLinkCheck(){
+        Assert.assertTrue(cshrHomePage.welshLanguage());
+    }
 
 }

@@ -5,17 +5,16 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import java.util.List;
+
 public class CshrResultsPage extends PageObject {
 
     public CshrResultsPage(WebDriver driver) {
         super(driver);
     }
 
-    @FindBy(className = "job-search__item-attributes-label")
+    @FindBy(className = "job-search__item-attributes-value")
     private WebElement jobDescription;
-
-    @FindBy(className = "job-search__total-results")
-    private WebElement totalJobs;
 
     @FindBy(className = "job-search__item-attributes-label")
     private WebElement noOfVacancies;
@@ -29,12 +28,29 @@ public class CshrResultsPage extends PageObject {
     @FindBy(linkText = "Back to search")
     private WebElement backToSearch;
 
-    public boolean jobDescriptionExists() {
-        return jobDescription.isDisplayed();
-    }
+    @FindBy(id = "search-results-total")
+    private WebElement searchResultsTotal;
 
-    public String jobsDispalyed() {
-        return totalJobs.getText();
+    @FindBy(linkText = "please try a new search")
+    private WebElement tryNewSearchLink;
+
+   @FindBy(xpath = "//li[contains(@id,'-numvacancies')]/span")
+   private List<WebElement> vacanciesNumber;
+
+   @FindBy(xpath = "//li[contains(@id,'-location')]/span")
+   private List<WebElement> locationNumber;
+
+    @FindBy(xpath = "//li[contains(@id,'-salary')]/span")
+    private List<WebElement> salaryNumber;
+
+    @FindBy(xpath = "//li[contains(@id,'-salary')]/span")
+    private List<WebElement> closingDateNumber;
+
+    @FindBy(xpath = "//li[contains(@id,'-grade')]/span")
+    private List<WebElement> jobGradeNumber;
+
+    public String jobDescriptionExists() {
+        return jobDescription.getText();
     }
 
     public String noOfVacanciesText() {
@@ -49,20 +65,67 @@ public class CshrResultsPage extends PageObject {
     public void clickBackToSearch() {
         backToSearch.click();
     }
-/*
-  @WhenPageOpens
-  public void waitForPage() {
-    // wait for google sub menu: Web | Images | Videos | ...
-    $("#hdtb-msb").waitUntilVisible();
-  }
 
-  public List<String> getResultsList() {
-    List<String> resultList = new ArrayList<>();
-    for (WebElement element : linkTitlesList) {
-      resultList.add(element.getText());
+    public String searchResultsTotalNum(){
+        return searchResultsTotal.getText();
     }
-    return resultList;
-  }*/
 
+    public void tryNewSeach(){
+        tryNewSearchLink.click();
+    }
 
+    public int listOfVacanciesNumber(){
+        int i=0;
+        for (WebElement e:vacanciesNumber) {
+            e.getText();
+            if(!e.getText().isEmpty()) {
+                i++;
+            }
+        }
+        return i;
+    }
+
+    public int listOfLocationNumber(){
+        int i=0;
+        for (WebElement e:locationNumber) {
+            e.getText();
+            if(!e.getText().isEmpty()) {
+                i++;
+            }
+        }
+        return i;
+    }
+
+    public int listOfSalaryNumber(){
+        int i=0;
+        for (WebElement e:salaryNumber) {
+            e.getText();
+            if(!e.getText().isEmpty()) {
+                i++;
+            }
+        }
+        return i;
+    }
+
+    public int listOfClosingDateNumber(){
+        int i=0;
+        for (WebElement e:closingDateNumber) {
+            e.getText();
+            if(!e.getText().isEmpty()) {
+                i++;
+            }
+        }
+        return i;
+    }
+
+    public int listOfJobGradeNumber(){
+        int i=0;
+        for (WebElement e:jobGradeNumber) {
+            e.getText();
+            if(!e.getText().isEmpty()) {
+                i++;
+            }
+        }
+        return i;
+    }
 }
