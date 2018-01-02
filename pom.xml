@@ -15,6 +15,7 @@
     <serenity.cucumber.version>1.6.5</serenity.cucumber.version>
     <webdriver.driver>chrome</webdriver.driver>
     <webdriver.base.url>http://localhost:3000</webdriver.base.url>
+    <serenity.rest.assured>1.8.12</serenity.rest.assured>
   </properties>
   <dependencies>
     <dependency>
@@ -31,6 +32,16 @@
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
       <version>${selenium.webdriver.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.serenity-bdd</groupId>
+      <artifactId>serenity-rest-assured</artifactId>
+      <version>${serenity.rest.assured}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>9.4-1206-jdbc42</version>
     </dependency>
     <!-- Logging with SLF4J & LogBack -->
     <dependency>
@@ -83,14 +94,14 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.19.1</version>
-          <!--<configuration>
-            <forkCount>5</forkCount>
-            <reuseForks>true</reuseForks>
-            <includes>
-              <include>com/test/serenity/runTests/*.java</include>
-            </includes>
-          <skip>true</skip>
-        </configuration>-->
+       <configuration>
+       <!-- <forkCount>3</forkCount>
+        <reuseForks>true</reuseForks>
+        <includes>
+        <include>src/test/java/serenity/cshr/runTests/*.java</include>
+        </includes>
+        <skip>true</skip>-->
+        </configuration>
       </plugin>
       <plugin>
         <groupId>net.serenity-bdd.maven.plugins</groupId>
@@ -118,6 +129,9 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>2.20.1</version>
         <configuration>
+          <forkCount>5</forkCount>
+          <reuseForks>true</reuseForks>
+          <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
           <testFailureIgnore>true</testFailureIgnore>
           <includes>
             <!-- this will allow us run tests from package during test running -->
