@@ -23,7 +23,10 @@ public class CshrHomePage extends PageObject {
     private WebElement location;
 
     @FindBy(linkText = "Cymraeg")
-    WebElement welshLanguageLink;
+    private WebElement welshLanguageLink;
+
+    @FindBy(className = "button")
+    private WebElement searchButton;
 
     @WhenPageOpens
     public void makeBrowserWindowFullScreen() {
@@ -32,23 +35,20 @@ public class CshrHomePage extends PageObject {
         }
     }
 
-    public CshrResultsPage searchForKeyword(String searchRequest) {
+    public void searchForKeyword(String searchRequest) {
         element(keyword).clear();
-        element(keyword).typeAndEnter(searchRequest);
-        return new CshrResultsPage(getDriver());
+        element(keyword).type(searchRequest);
+
     }
 
-    public CshrResultsPage searchForLocation(String searchRequest) {
+    public void searchForLocation(String searchLocation) {
         element(location).clear();
-        element(location).typeAndEnter(searchRequest);
-        return new CshrResultsPage(getDriver());
+        element(location).type(searchLocation);
+
     }
 
-    public CshrResultsPage searchForKeywordAndLocation(String searchKeyword, String searchlocation) {
-        element(keyword).clear();
-        element(keyword).typeAndEnter(searchKeyword);
-        element(location).clear();
-        element(location).typeAndEnter(searchlocation);
+    public CshrResultsPage clickSearch(){
+        element(searchButton).click();
         return new CshrResultsPage(getDriver());
     }
 

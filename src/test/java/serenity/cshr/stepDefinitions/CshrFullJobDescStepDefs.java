@@ -14,7 +14,6 @@ public class CshrFullJobDescStepDefs {
     @Then("^I should be shown a full description of the job in a new page with salary min and max, closing date, Apply$")
     public void i_should_be_shown_a_full_description_of_the_job_in_a_new_page_with_salary_min_and_max_closing_date_apply() {
         cshrFullJobDescriptionSteps.verifyApplyIsDisplayed();
-        cshrFullJobDescriptionSteps.clickApply();
     }
 
     @And("^I click back to search results$")

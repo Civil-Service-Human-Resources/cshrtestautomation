@@ -5,7 +5,6 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import serenity.cshr.steps.CshrHomePageSteps;
-import serenity.cshr.steps.CshrHomePageSteps;
 
 public class CshrHomePageStepDefs {
 
@@ -38,6 +37,7 @@ public class CshrHomePageStepDefs {
     @When("^I enter \"([^\"]*)\" in job title and \"([^\"]*)\" in location and click search$")
     public void i_enter_in_job_title_and_in_location_and_click_search(String keyword, String location) {
         cshrHomePageSteps.enterSearchKeyWordAndLocation(keyword, location);
+        cshrHomePageSteps.clickSearch();
     }
 
     //TODO

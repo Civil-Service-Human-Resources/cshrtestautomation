@@ -6,29 +6,9 @@ import serenity.cshr.pages.CshrHomePage;
 
 public class CshrHomePageSteps {
 
-    //CshrSearchPage searchPage;
-    //CshrResultsPage resultsPage;
+
     CshrHomePage cshrHomePage;
 
-  /*@Step
-  public void openGoogleSearchPage() {
-    searchPage.open();
-  }
-
-  @Step
-  public void searchFor(String searchRequest) {
-    resultsPage = searchPage.searchFor(searchRequest);
-  }
-
-  @Step
-  public void verifyResult(String searchResult) {
-    List<String> results = resultsPage.getResultsList();
-    Assert.assertTrue(results.contains(searchResult));
-  }
-  @Step
-  public void openSearchPage(){
-    searchPage.open();
-  }*/
 
     @Step
     public void openCshrSearchPage() {
@@ -42,7 +22,13 @@ public class CshrHomePageSteps {
 
     @Step
     public void enterSearchKeyWordAndLocation(String keyword, String location) {
-        cshrHomePage.searchForKeywordAndLocation(keyword, location);
+        cshrHomePage.searchForKeyword(keyword);
+        cshrHomePage.searchForLocation(location);
+    }
+
+    @Step
+    public void clickSearch(){
+        cshrHomePage.clickSearch();
     }
 
     @Step

@@ -43,7 +43,7 @@ public class CshrResultsPage extends PageObject {
     @FindBy(xpath = "//li[contains(@id,'-salary')]/span")
     private List<WebElement> salaryNumber;
 
-    @FindBy(xpath = "//li[contains(@id,'-salary')]/span")
+    @FindBy(xpath = "//li[contains(@id,'-closingdate')]/span")
     private List<WebElement> closingDateNumber;
 
     @FindBy(xpath = "//li[contains(@id,'-grade')]/span")
@@ -77,7 +77,6 @@ public class CshrResultsPage extends PageObject {
     public int listOfVacanciesNumber(){
         int i=0;
         for (WebElement e:vacanciesNumber) {
-            e.getText();
             if(!e.getText().isEmpty()) {
                 i++;
             }
@@ -88,7 +87,6 @@ public class CshrResultsPage extends PageObject {
     public int listOfLocationNumber(){
         int i=0;
         for (WebElement e:locationNumber) {
-            e.getText();
             if(!e.getText().isEmpty()) {
                 i++;
             }
@@ -99,7 +97,6 @@ public class CshrResultsPage extends PageObject {
     public int listOfSalaryNumber(){
         int i=0;
         for (WebElement e:salaryNumber) {
-            e.getText();
             if(!e.getText().isEmpty()) {
                 i++;
             }
@@ -110,7 +107,6 @@ public class CshrResultsPage extends PageObject {
     public int listOfClosingDateNumber(){
         int i=0;
         for (WebElement e:closingDateNumber) {
-            e.getText();
             if(!e.getText().isEmpty()) {
                 i++;
             }
@@ -121,7 +117,6 @@ public class CshrResultsPage extends PageObject {
     public int listOfJobGradeNumber(){
         int i=0;
         for (WebElement e:jobGradeNumber) {
-            e.getText();
             if(!e.getText().isEmpty()) {
                 i++;
             }

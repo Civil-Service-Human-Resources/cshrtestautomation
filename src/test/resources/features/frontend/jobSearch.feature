@@ -1,4 +1,5 @@
-Feature:As a job seeker
+Feature: Search Results
+  As a job seeker
   In order to find a role relevant to me
   I want to be able to search on a keyword and location
 
@@ -43,6 +44,7 @@ Feature:As a job seeker
       | web              | london          |
       | business analyst | bristol         |
       | Analyst          | Bristol         |
+      | technical        | london          |
 
 
   Scenario Outline: Search for valid criteria, check and click if back to search results link is displayed
@@ -67,9 +69,9 @@ Feature:As a job seeker
     Then I should see homepage with options to search for location and keyword
     Examples:
       | keyword | locationkeyword |
-      | dooooo     | sfjsjfjdf          |
+      | dooooo  | sfjsjfjdf       |
 
-  Scenario Outline: An apply button is displayed on the job description page
+  Scenario Outline: An apply button is displayed on the job description page and clicking apply navigates to temporary page
     When I enter "<keyword>" in job title and "<locationkeyword>" in location and click search
     Then I should see only the results matching "<keyword>" in "<locationkeyword>" in a new page
     When I select a job that matches my criteria
@@ -83,6 +85,13 @@ Feature:As a job seeker
 
   Scenario: I should see Welsh language option on homepage
   Then I should see a link to welsh language
+
+  #Scenario Outline: An apply button is displayed on the job description page
+  #  When I enter "<keyword>" in job title and "<locationkeyword>" in location and click search
+  #  Then I should see only the results matching "<keyword>" in "<locationkeyword>" in a new page
+  #  When I select a job that matches my criteria
+  #  Then I should see contact point for applicants
+  #  And working hours
 
 #  Scenario Outline: Search for invalid criteria in both keyword and location to no results page displayed
 #    When I enter "<keyword>" in job title and "<locationkeyword>" in location and click search

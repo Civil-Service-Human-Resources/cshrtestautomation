@@ -13,7 +13,6 @@ public class DBUtils {
             Properties props = new Properties();
             props.setProperty("user", "postgres");
             props.setProperty("password", "qwerty");
-            //props.setProperty("ssl", "false");
             conn = DriverManager.getConnection(url, props);
 
         } catch (Exception e) {

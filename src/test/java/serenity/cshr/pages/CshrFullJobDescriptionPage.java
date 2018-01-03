@@ -16,8 +16,13 @@ public class CshrFullJobDescriptionPage extends PageObject {
     @FindBy(linkText = "Back to search results")
     private WebElement backTOSearchResults;
 
+    @FindBy(css = "p[style]")
+    private WebElement workingHours;
+
+    @FindBy(css = "[aria-label =Name]")
+    private WebElement contactName;
+
     public boolean isApplyDisplayed() {
-        System.out.println("The text displayed is: " + apply.getText());
         return apply.isDisplayed();
     }
 
@@ -35,5 +40,13 @@ public class CshrFullJobDescriptionPage extends PageObject {
 
     public void isBackToSearchResultsDisplayed() {
         backTOSearchResults.isDisplayed();
+    }
+
+    public boolean isContactPointDisplayed(){
+       return contactName.isDisplayed();
+    }
+
+    public boolean isWorkingHoursDisplayed(){
+        return workingHours.isDisplayed();
     }
 }
