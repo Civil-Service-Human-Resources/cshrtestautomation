@@ -86,6 +86,49 @@ Feature: Search Results
   Scenario: I should see Welsh language option on homepage
   Then I should see a link to welsh language
 
+  Scenario Outline: User is able to edit and enter new keyword from the search results page to refine results
+    When I enter "<keyword>" in job title and "<locationkeyword>" in location and click search
+    Then I should see only the results matching "<keyword>" in "<locationkeyword>" in a new page
+    And I should see search filters displayed in search results page
+    And I clear existing search text in keyword
+    When I enter "<newKeyword>" in the keyword and refine
+    Then I should see only the results matching "<keyword>" in "<locationkeyword>" in a new page
+    Examples:
+      | keyword | locationkeyword |newKeyword|
+      | web     | london          | technical|
+
+  Scenario Outline: Pagination - Page number, next and prev links are displayed when the results are more than 20
+    When I enter "<keyword>" in job title and "<locationkeyword>" in location and click search
+    Then I should see only the results matching "<keyword>" in "<locationkeyword>" in a new page
+    When the results are more than "<results number>"
+    Then a link to next page is displayed
+    When I click on the link to the last page
+    Then a previous link is displayed
+    Examples:
+  | keyword | locationkeyword |results number|
+  | web     | london          | 20|
+
+  Scenario Outline: Pagination - Only 5 pages are displayed any time
+    When I enter "<keyword>" in job title and "<locationkeyword>" in location and click search
+    Then I should see only the results matching "<keyword>" in "<locationkeyword>" in a new page
+    When the results are more than "<results number>"
+    Then a link to next page is displayed
+    When I click on the link to the last page
+    Then I should see only "<noOfPagesListed>" pages listed
+    And a previous link is displayed
+    Examples:
+      | keyword | locationkeyword |results number|noOfPagesListed|
+      | l       | l               | 20           |     5         |
+
+  Scenario Outline: Pagination - Next is not displayed when results are less than 20
+    When I enter "<keyword>" in job title and "<locationkeyword>" in location and click search
+    Then I should see only the results matching "<keyword>" in "<locationkeyword>" in a new page
+    When the results are less than "<results number>"
+    Then a link to next page is not displayed
+  Examples:
+  | keyword | locationkeyword |results number|
+  | technical| Bristol         | 20           |
+
   #Scenario Outline: An apply button is displayed on the job description page
   #  When I enter "<keyword>" in job title and "<locationkeyword>" in location and click search
   #  Then I should see only the results matching "<keyword>" in "<locationkeyword>" in a new page

@@ -2,6 +2,7 @@ package serenity.cshr.steps;
 
 import net.thucydides.core.annotations.Step;
 import org.junit.Assert;
+import serenity.cshr.pages.CshrHomePage;
 import serenity.cshr.pages.CshrResultsPage;
 
 public class CshrSearchResultsSteps {
@@ -13,8 +14,8 @@ public class CshrSearchResultsSteps {
     }
 
     @Step
-    public void noOfJobsFound() {
-        System.out.println(cshrResultsPage.searchResultsTotalNum());
+    public String noOfJobsFound() {
+        return cshrResultsPage.searchResultsTotalNum();
     }
 
     @Step
@@ -64,6 +65,54 @@ public class CshrSearchResultsSteps {
     @Step
     public void clickTryNewSeachLink(){
         cshrResultsPage.tryNewSeach();
+    }
+
+    @Step
+    public void clearExistingKeyword(){
+        cshrResultsPage.clearKeyword();
+    }
+    @Step
+    public void verifySearchFiltersIsDisplayed(){
+        cshrResultsPage.isSearchFiltersDisplayed();
+    }
+
+    @Step
+    public void enterKeyword(String newKeyword){
+        cshrResultsPage.enterKeyword(newKeyword);
+    }
+
+    @Step
+    public void refineResults(){
+        cshrResultsPage.clickRefine();
+    }
+    @Step
+    public void navigateToNext(){
+
+        cshrResultsPage.clickNext();
+    }
+
+    @Step
+    public void navigateToLastPage(){
+        cshrResultsPage.clickLastPageLink();
+    }
+    @Step
+    public void navigateToPrevious(){
+        cshrResultsPage.clickPrevious();
+    }
+
+    @Step
+    public boolean verifyNextIsDisplayed(){
+        return cshrResultsPage.isNextDisplayed();
+    }
+
+    @Step
+    public boolean verifyPrevIsDisplayed(){
+        return  cshrResultsPage.isPrevDisplayed();
+    }
+
+    @Step
+    public int noOfPageNumbersDisplayed(){
+        return cshrResultsPage.noOfPageLinks();
     }
 
 }

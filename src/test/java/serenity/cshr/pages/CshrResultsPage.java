@@ -34,11 +34,11 @@ public class CshrResultsPage extends PageObject {
     @FindBy(linkText = "please try a new search")
     private WebElement tryNewSearchLink;
 
-   @FindBy(xpath = "//li[contains(@id,'-numvacancies')]/span")
-   private List<WebElement> vacanciesNumber;
+    @FindBy(xpath = "//li[contains(@id,'-numvacancies')]/span")
+    private List<WebElement> vacanciesNumber;
 
-   @FindBy(xpath = "//li[contains(@id,'-location')]/span")
-   private List<WebElement> locationNumber;
+    @FindBy(xpath = "//li[contains(@id,'-location')]/span")
+    private List<WebElement> locationNumber;
 
     @FindBy(xpath = "//li[contains(@id,'-salary')]/span")
     private List<WebElement> salaryNumber;
@@ -48,6 +48,27 @@ public class CshrResultsPage extends PageObject {
 
     @FindBy(xpath = "//li[contains(@id,'-grade')]/span")
     private List<WebElement> jobGradeNumber;
+
+    @FindBy(className = "button")
+    private WebElement refine;
+
+    @FindBy(linkText="Next")
+    private WebElement nextLink;
+
+    @FindBy(linkText="Prev")
+    private WebElement prevLink;
+
+    @FindBy(className="pagination__summary")
+    private WebElement paginationSummary;
+
+    @FindBy(id = "keyword")
+    private WebElement keyword;
+
+    @FindBy(className =  "search-filters")
+    private WebElement searchFilters;
+
+    @FindBy(css = "[aria-label^=\"Go to page\"]")
+    private List<WebElement> currentPageList;
 
     public String jobDescriptionExists() {
         return jobDescription.getText();
@@ -123,4 +144,49 @@ public class CshrResultsPage extends PageObject {
         }
         return i;
     }
+
+    public boolean isPaginationSummaryDisplayed(){
+        return paginationSummary.isDisplayed() && paginationSummary.getText().contains("Showing");
+    }
+
+    public void clickPrevious(){
+
+        prevLink.click();
+    }
+
+    public void clickNext(){
+        nextLink.click();
+    }
+
+    public void clickLastPageLink(){
+        element(currentPageList.get(noOfPageLinks()-1)).click();
+    }
+
+    public int noOfPageLinks(){
+        return currentPageList.size();
+    }
+    public void clickRefine(){
+        refine.click();
+    }
+
+    public void clearKeyword(){
+        element(keyword).clear();
+    }
+
+    public void isSearchFiltersDisplayed(){
+        element(searchFilters).isDisplayed();
+    }
+
+    public void enterKeyword(String newKeyword){
+        element(keyword).type(newKeyword);
+    }
+
+    public boolean isNextDisplayed(){
+
+       return element(nextLink).isCurrentlyEnabled();
+    }
+    public boolean isPrevDisplayed(){
+        return element(prevLink).isCurrentlyEnabled();
+    }
+
 }

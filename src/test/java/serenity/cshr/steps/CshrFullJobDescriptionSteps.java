@@ -9,7 +9,6 @@ public class CshrFullJobDescriptionSteps {
 
     @Step
     public void verifyApplyIsDisplayed() {
-
         Assert.assertTrue(cshrFullJobDescriptionPage.isApplyDisplayed());
     }
 

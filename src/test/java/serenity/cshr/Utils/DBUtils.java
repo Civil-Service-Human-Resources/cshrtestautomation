@@ -7,6 +7,12 @@ public class DBUtils {
 
     private static Connection conn = null;
 
+    private String sqlForKeywordSearch = "SELECT * FROM vacancies WHERE CONCAT(title, ' ', description,' ',eligibility) ILIKE ? and responsibilities is not null;";
+    private String sqlForKeywordSearchCount = "SELECT count(*) FROM vacancies WHERE CONCAT(title, ' ', description,' ',eligibility) ILIKE ? and responsibilities is not null;";
+    private String sqlForLocationOnly = "SELECT * FROM vacancies WHERE location ILIKE ? and responsibilities is not null;";
+    private String sqlForLocationOnlyCount = "SELECT count(*) FROM vacancies WHERE location ILIKE ? and responsibilities is not null;";
+    private String sqlForKeywordAndLocationSearch = "SELECT * FROM vacancies WHERE location ILIKE ? AND CONCAT(title, ' ', description) ILIKE ? and responsibilities is not null;";
+
     public static Connection connectToDataBase() throws SQLException {
         try {
             String url = "jdbc:postgresql://localhost/cshr";
@@ -22,10 +28,9 @@ public class DBUtils {
         return conn;
     }
 
-    public static String searchByKeyword(String keyword) throws SQLException {
+    public  String searchByKeyword(String keyword) throws SQLException {
         connectToDataBase();
-        String sql = "SELECT * FROM vacancies WHERE CONCAT(title, ' ', description) ILIKE ? and responsibilities is not null;";
-        PreparedStatement preStatement = conn.prepareStatement(sql);
+        PreparedStatement preStatement = conn.prepareStatement(sqlForKeywordSearch);
         preStatement.setString(1, "%"+keyword+"%");
         ResultSet rs = preStatement.executeQuery();
         rs.next();
@@ -36,10 +41,9 @@ public class DBUtils {
         return result;
     }
 
-    public static int countSearchByKeyword(String keyword) throws SQLException {
+    public  int countSearchByKeyword(String keyword) throws SQLException {
         connectToDataBase();
-        String sql = "SELECT count(*) FROM vacancies WHERE CONCAT(title, ' ', description) ILIKE ? and responsibilities is not null;";
-        PreparedStatement preStatement = conn.prepareStatement(sql);
+        PreparedStatement preStatement = conn.prepareStatement(sqlForKeywordSearchCount);
         preStatement.setString(1, "%"+keyword+"%");
         ResultSet rs = preStatement.executeQuery();
         rs.next();
@@ -48,10 +52,10 @@ public class DBUtils {
         return count;
     }
 
-    public static String searchByLocation(String location) throws SQLException {
+    public  String searchByLocation(String location) throws SQLException {
         connectToDataBase();
         String sql = "SELECT * FROM vacancies WHERE location ILIKE ? and responsibilities is not null;";
-        PreparedStatement preStatement = conn.prepareStatement(sql);
+        PreparedStatement preStatement = conn.prepareStatement(sqlForLocationOnly);
         preStatement.setString(1, "%"+location+"%");
         ResultSet rs = preStatement.executeQuery();
         rs.next();
@@ -62,10 +66,9 @@ public class DBUtils {
         return result;
     }
 
-    public static int countSearchByLocation(String location) throws SQLException {
+    public  int countSearchByLocation(String location) throws SQLException {
         connectToDataBase();
-        String sql = "SELECT count(*) FROM vacancies WHERE location ILIKE ? and responsibilities is not null;";
-        PreparedStatement preStatement = conn.prepareStatement(sql);
+        PreparedStatement preStatement = conn.prepareStatement(sqlForLocationOnlyCount);
         preStatement.setString(1, "%"+location+"%");
         ResultSet rs = preStatement.executeQuery();
         rs.next();
@@ -75,10 +78,10 @@ public class DBUtils {
         return count;
     }
 
-    public static String searchByKeywordAndLocation(String keyword, String location) throws SQLException {
+    public  String searchByKeywordAndLocation(String keyword, String location) throws SQLException {
         connectToDataBase();
         String sql = "SELECT * FROM vacancies WHERE location ILIKE ? AND CONCAT(title, ' ', description) ILIKE ? and responsibilities is not null;";
-        PreparedStatement preStatement = conn.prepareStatement(sql);
+        PreparedStatement preStatement = conn.prepareStatement(sqlForKeywordAndLocationSearch);
         preStatement.setString(1,"%"+location+"%");
         preStatement.setString(2,"%"+keyword+"%");
         ResultSet rs = preStatement.executeQuery();
@@ -89,7 +92,7 @@ public class DBUtils {
         return result;
     }
 
-    public static int countSearchByKeywordAndLocation(String keyword, String location) throws SQLException {
+    public  int countSearchByKeywordAndLocation(String keyword, String location) throws SQLException {
         connectToDataBase();
         String sql = "SELECT * FROM vacancies WHERE location ILIKE ? AND CONCAT(title, ' ', description) ILIKE ? and responsibilities is not null;";
         PreparedStatement preStatement = conn.prepareStatement(sql);
@@ -98,6 +101,7 @@ public class DBUtils {
         ResultSet rs = preStatement.executeQuery();
         rs.next();
         int count = rs.getInt(1);
+        preStatement.close();
         return count;
     }
 
