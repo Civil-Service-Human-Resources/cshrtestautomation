@@ -25,6 +25,12 @@ public class CshrResultsPageStepDefs {
 
     }
 
+    @Then("^I should see only the results matching \"([^\"]*)\" in \"([^\"]*)\" in a new page$")
+    public void i_should_see_only_the_results_matching_in_in_a_new_page(String keyword, String location) {
+        //Look for location in the html to see if all the locations are filtered according to the search string and compare it against the query
+        cshrSearchResultsSteps.areTheResultsSameAsSearch(keyword,location);
+    }
+
     @Then("^include the number of jobs found, partial job description, no of vaccancies, location, salary, job grade, closing date$")
     public void include_the_number_of_jobs_found_partial_job_description_no_of_vaccancies_location_salary_job_grade_closing_date() {
 

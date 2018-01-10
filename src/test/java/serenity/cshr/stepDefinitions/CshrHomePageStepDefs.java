@@ -17,10 +17,9 @@ public class CshrHomePageStepDefs {
         cshrHomePageSteps.openCshrSearchPage();
     }
 
-    //TODO
     @Then("^I should see homepage with options to search for location and keyword$")
     public void i_should_see_homepage_with_options_to_search_for_location_and_keyword() {
-
+        cshrHomePageSteps.areKeywordAndLocationPresent();
     }
 
     @When("^I enter \"([^\"]*)\" in job title and click search$")
@@ -30,7 +29,7 @@ public class CshrHomePageStepDefs {
 
     //TODO
     @When("^I enter \"([^\"]*)\" in location and click search$")
-    public void i_enter_in_location_and_click_search(String arg1) {
+    public void i_enter_in_location_and_click_search(String location) {
     }
 
 
@@ -40,12 +39,7 @@ public class CshrHomePageStepDefs {
         cshrHomePageSteps.clickSearch();
     }
 
-    //TODO
-    @Then("^I should see only the results matching \"([^\"]*)\" in \"([^\"]*)\" in a new page$")
-    public void i_should_see_only_the_results_matching_in_in_a_new_page(String arg1, String arg2) {
-        //Look for location in the html to see if all the locations are filtered according to the search string and compare it against the query
 
-    }
 
     @Then("^I should see a link to welsh language$")
     public void I_should_see_a_link_to_welsh_language(){

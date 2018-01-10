@@ -2,11 +2,16 @@ package serenity.cshr.steps;
 
 import net.thucydides.core.annotations.Step;
 import org.junit.Assert;
+import serenity.cshr.Utils.DBUtils;
 import serenity.cshr.pages.CshrHomePage;
 import serenity.cshr.pages.CshrResultsPage;
 
+import java.sql.SQLException;
+
 public class CshrSearchResultsSteps {
     CshrResultsPage cshrResultsPage;
+    DBUtils dbUtils;
+    int keywordAndLocationCount;
 
     @Step
     public void verifyJobDescriptionExists() {
@@ -115,4 +120,15 @@ public class CshrSearchResultsSteps {
         return cshrResultsPage.noOfPageLinks();
     }
 
+    @Step
+    public void areTheResultsSameAsSearch(String keyword,String location){
+        try {
+            dbUtils = new DBUtils();
+            keywordAndLocationCount= dbUtils.countSearchByKeywordAndLocation(keyword, location);
+            Assert.assertEquals(keywordAndLocationCount,Integer.parseInt(cshrResultsPage.searchResultsTotalNum()));
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
 }

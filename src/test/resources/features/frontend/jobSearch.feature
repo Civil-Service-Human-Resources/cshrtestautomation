@@ -92,7 +92,7 @@ Feature: Search Results
     And I should see search filters displayed in search results page
     And I clear existing search text in keyword
     When I enter "<newKeyword>" in the keyword and refine
-    Then I should see only the results matching "<keyword>" in "<locationkeyword>" in a new page
+    Then I should see only the results matching "<newKeyword>" in "<locationkeyword>" in a new page
     Examples:
       | keyword | locationkeyword |newKeyword|
       | web     | london          | technical|

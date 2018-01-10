@@ -20,7 +20,6 @@ public class DBUtils {
             props.setProperty("user", "postgres");
             props.setProperty("password", "qwerty");
             conn = DriverManager.getConnection(url, props);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,7 +79,7 @@ public class DBUtils {
 
     public  String searchByKeywordAndLocation(String keyword, String location) throws SQLException {
         connectToDataBase();
-        String sql = "SELECT * FROM vacancies WHERE location ILIKE ? AND CONCAT(title, ' ', description) ILIKE ? and responsibilities is not null;";
+        String sql = "SELECT * FROM vacancies WHERE location ILIKE ? AND CONCAT(title, ' ', description) ILIKE ?;";
         PreparedStatement preStatement = conn.prepareStatement(sqlForKeywordAndLocationSearch);
         preStatement.setString(1,"%"+location+"%");
         preStatement.setString(2,"%"+keyword+"%");
@@ -88,13 +87,13 @@ public class DBUtils {
         rs.next();
         String result = (rs.getString("description")+ " "+rs.getString("title")+" "+rs.getString("eligibility")+" "+rs.getString("responsibilities")
                 +" "+rs.getString("role"));
-
+        preStatement.close();
         return result;
     }
 
     public  int countSearchByKeywordAndLocation(String keyword, String location) throws SQLException {
         connectToDataBase();
-        String sql = "SELECT * FROM vacancies WHERE location ILIKE ? AND CONCAT(title, ' ', description) ILIKE ? and responsibilities is not null;";
+        String sql = "SELECT count(*) FROM vacancies WHERE location ILIKE ? AND CONCAT(title, '', description) ILIKE ?;";
         PreparedStatement preStatement = conn.prepareStatement(sql);
         preStatement.setString(1,"%"+location+"%");
         preStatement.setString(2,"%"+keyword+"%");
@@ -104,5 +103,4 @@ public class DBUtils {
         preStatement.close();
         return count;
     }
-
 }

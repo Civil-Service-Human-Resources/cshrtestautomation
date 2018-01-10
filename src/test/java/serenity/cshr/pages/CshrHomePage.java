@@ -56,4 +56,11 @@ public class CshrHomePage extends PageObject {
        return welshLanguageLink.isDisplayed();
     }
 
+    public boolean isKeywordPresent(){
+        return element(keyword).isDisplayed();
+    }
+
+    public boolean isLocationDisplayed(){
+        return element(location).isDisplayed();
+    }
 }

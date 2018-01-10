@@ -36,4 +36,11 @@ public class CshrHomePageSteps {
         Assert.assertTrue(cshrHomePage.welshLanguage());
     }
 
+    @Step
+    public void areKeywordAndLocationPresent(){
+        Assert.assertTrue(cshrHomePage.isKeywordPresent());
+        Assert.assertTrue(cshrHomePage.isLocationDisplayed());
+    }
+
+
 }
