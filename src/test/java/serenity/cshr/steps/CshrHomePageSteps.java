@@ -41,6 +41,9 @@ public class CshrHomePageSteps {
         Assert.assertTrue(cshrHomePage.isKeywordPresent());
         Assert.assertTrue(cshrHomePage.isLocationDisplayed());
     }
-
+    @Step
+    public String verifyErrorMessageIsShown(){
+        return cshrHomePage.getErrorSummaryMessage();
+    }
 
 }

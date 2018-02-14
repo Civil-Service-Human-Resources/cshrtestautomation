@@ -4,6 +4,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
+import org.junit.Assert;
 import serenity.cshr.steps.CshrHomePageSteps;
 
 public class CshrHomePageStepDefs {
@@ -28,15 +29,18 @@ public class CshrHomePageStepDefs {
     }
 
     //TODO
-    @When("^I enter \"([^\"]*)\" in location and click search$")
+    @When("^I enter \"([^\"]*)\" in location$")
     public void i_enter_in_location_and_click_search(String location) {
     }
 
+    @When("^I click on search$")
+    public void i_click_on_search(){
+        cshrHomePageSteps.clickSearch();
+    }
 
-    @When("^I enter \"([^\"]*)\" in job title and \"([^\"]*)\" in location and click search$")
+    @When("^I enter \"([^\"]*)\" in job title and \"([^\"]*)\" in location$")
     public void i_enter_in_job_title_and_in_location_and_click_search(String keyword, String location) {
         cshrHomePageSteps.enterSearchKeyWordAndLocation(keyword, location);
-        cshrHomePageSteps.clickSearch();
     }
 
 
@@ -46,5 +50,9 @@ public class CshrHomePageStepDefs {
         cshrHomePageSteps.welshLanguageLinkCheck();
     }
 
+    @When("^I should see an error message \"([^\"]*)\"$")
+    public void I_should_see_an_error_message(String message){
+        Assert.assertEquals(message, cshrHomePageSteps.verifyErrorMessageIsShown());
+    }
 
 }

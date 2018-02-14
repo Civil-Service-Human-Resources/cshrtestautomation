@@ -7,11 +7,16 @@ import serenity.cshr.pages.CshrHomePage;
 import serenity.cshr.pages.CshrResultsPage;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class CshrSearchResultsSteps {
-    CshrResultsPage cshrResultsPage;
-    DBUtils dbUtils;
-    int keywordAndLocationCount;
+    private CshrResultsPage cshrResultsPage;
+    private DBUtils dbUtils;
+    private int keywordAndLocationCount;
+    private int keywordDeptAndLocationCount;
 
     @Step
     public void verifyJobDescriptionExists() {
@@ -97,38 +102,67 @@ public class CshrSearchResultsSteps {
     }
 
     @Step
-    public void navigateToLastPage(){
-        cshrResultsPage.clickLastPageLink();
+    public void scrollToBottom(){
+        cshrResultsPage.scrolltoBottom();
     }
-    @Step
-    public void navigateToPrevious(){
-        cshrResultsPage.clickPrevious();
-    }
-
     @Step
     public boolean verifyNextIsDisplayed(){
+
         return cshrResultsPage.isNextDisplayed();
     }
 
-    @Step
     public boolean verifyPrevIsDisplayed(){
-        return  cshrResultsPage.isPrevDisplayed();
+        return cshrResultsPage.isprevDisplayed();
     }
-
     @Step
-    public int noOfPageNumbersDisplayed(){
-        return cshrResultsPage.noOfPageLinks();
-    }
-
-    @Step
-    public void areTheResultsSameAsSearch(String keyword,String location){
+    public void areTheResultsSameAsSearch(String keyword,String location, int radius,Double latitude, Double longitude ){
         try {
             dbUtils = new DBUtils();
-            keywordAndLocationCount= dbUtils.countSearchByKeywordAndLocation(keyword, location);
+            keywordAndLocationCount= dbUtils.countSearchByKeywordAndLocation(keyword, location,radius, latitude,longitude);
             Assert.assertEquals(keywordAndLocationCount,Integer.parseInt(cshrResultsPage.searchResultsTotalNum()));
         }
         catch (SQLException e){
             e.printStackTrace();
         }
+    }
+
+    @Step
+    public void aretheCorrectJobsWithDeptsDisplayed(String keyword, String department,String location, int radius, Double latitude, Double longitude ){
+        try {
+            dbUtils = new DBUtils();
+            keywordDeptAndLocationCount= dbUtils.countSearchByKeywordDeptAndLocation(keyword, department, location,radius, latitude,longitude);
+            Assert.assertEquals(keywordDeptAndLocationCount,Integer.parseInt(cshrResultsPage.searchResultsTotalNum()));
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        //Verify that the department boxes are checked?
+    }
+
+    @Step
+    public void selectDepartments(String departments){
+        cshrResultsPage.selectDepartments(departments);
+    }
+    @Step
+    public void isDropdownDefault(String defaultNum){
+        Assert.assertTrue(cshrResultsPage.isdisplayResultsDropdownPresent());
+        Assert.assertEquals(defaultNum,cshrResultsPage.getDefaultPerPage());
+    }
+
+    @Step
+    public void listofOptionsInDropDown(String optionsList){
+        List<String> dropDowns = Arrays.asList(optionsList.split(","));
+        Assert.assertTrue(dropDowns.equals(cshrResultsPage.getListOfDropDown()));
+
+    }
+
+    @Step
+    public void selectNoOfResultsToDisplay(String resultsPerPage){
+        cshrResultsPage.selectResultsNumbertoDisplay(resultsPerPage);
+    }
+
+    @Step
+    public void expandDeptsAcccordion(){
+        cshrResultsPage.clickDeptAccordion();
     }
 }

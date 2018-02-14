@@ -3,6 +3,7 @@ package serenity.cshr.pages;
 import net.serenitybdd.core.pages.PageObject;
 import net.thucydides.core.annotations.DefaultUrl;
 import net.thucydides.core.annotations.WhenPageOpens;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -28,10 +29,22 @@ public class CshrHomePage extends PageObject {
     @FindBy(className = "button")
     private WebElement searchButton;
 
+    @FindBy(className = "error-message")
+    private WebElement locationErrorMessage;
+
+    @FindBy(id = "search-form-errors")
+    private WebElement summaryErrorMessageTitle;
+
+    @FindBy(className = "error-summary-list")
+    private WebElement errorSummaryList;
+
+    @FindBy(className = "error-message")
+    private WebElement inLineLocationError;
+
     @WhenPageOpens
     public void makeBrowserWindowFullScreen() {
         if(!getDriver().toString().contains("appium")) {
-            getDriver().manage().window().setSize(dimension);
+            getDriver().manage().window().fullscreen();
         }
     }
 
@@ -62,5 +75,15 @@ public class CshrHomePage extends PageObject {
 
     public boolean isLocationDisplayed(){
         return element(location).isDisplayed();
+    }
+
+    public String getErrorSummaryMessage(){
+        summaryErrorMessageTitle.getText();
+        if(inLineLocationError.getText().equals(errorSummaryList.getText())){
+            return errorSummaryList.getText();
+        }
+        else{
+            return null;
+        }
     }
 }

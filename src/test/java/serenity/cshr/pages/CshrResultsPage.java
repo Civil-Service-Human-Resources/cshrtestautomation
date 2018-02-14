@@ -3,8 +3,10 @@ package serenity.cshr.pages;
 import net.serenitybdd.core.pages.PageObject;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
-
+import org.openqa.selenium.support.ui.Select;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CshrResultsPage extends PageObject {
@@ -50,25 +52,34 @@ public class CshrResultsPage extends PageObject {
     private List<WebElement> jobGradeNumber;
 
     @FindBy(className = "button")
-    private WebElement refine;
+    private WebElement updateResults;
 
-    @FindBy(linkText="Next")
+    @FindBy(css="[aria-label=\"Go to next page\"]")
     private WebElement nextLink;
 
-    @FindBy(linkText="Prev")
+    @FindBy(css="[aria-label=\"Go to previous page\"]")
     private WebElement prevLink;
-
-    @FindBy(className="pagination__summary")
-    private WebElement paginationSummary;
 
     @FindBy(id = "keyword")
     private WebElement keyword;
 
     @FindBy(className =  "search-filters")
     private WebElement searchFilters;
-
+/*
     @FindBy(css = "[aria-label^=\"Go to page\"]")
-    private List<WebElement> currentPageList;
+    private List<WebElement> currentPageList;*/
+
+    @FindBy(css =".form-multicheckbox__item")
+    private List<WebElement> deptCheckboxes;
+
+    @FindBy(id= "dept-1")
+    private WebElement deptt;
+
+    @FindBy(id = "rpp")
+    private WebElement resultsPerPageDropDown;
+
+    @FindBy(css ="[aria-controls=\"department-list\"]")
+    private WebElement departmentAccordion;
 
     public String jobDescriptionExists() {
         return jobDescription.getText();
@@ -145,28 +156,24 @@ public class CshrResultsPage extends PageObject {
         return i;
     }
 
-    public boolean isPaginationSummaryDisplayed(){
-        return paginationSummary.isDisplayed() && paginationSummary.getText().contains("Showing");
+    public void scrolltoBottom(){
+        this.scroll(resultsPerPageDropDown);
     }
 
-    public void clickPrevious(){
-
-        prevLink.click();
+    public void scroll(WebElement ele){
+        Actions actions = new Actions(getDriver());
+        actions.moveToElement(ele).build().perform();
     }
 
     public void clickNext(){
         nextLink.click();
     }
 
-    public void clickLastPageLink(){
-        element(currentPageList.get(noOfPageLinks()-1)).click();
-    }
-
-    public int noOfPageLinks(){
+   /* public int noOfPageLinks(){
         return currentPageList.size();
-    }
+    }*/
     public void clickRefine(){
-        refine.click();
+        updateResults.click();
     }
 
     public void clearKeyword(){
@@ -182,11 +189,51 @@ public class CshrResultsPage extends PageObject {
     }
 
     public boolean isNextDisplayed(){
-
        return element(nextLink).isCurrentlyEnabled();
     }
-    public boolean isPrevDisplayed(){
+
+    public boolean isprevDisplayed(){
         return element(prevLink).isCurrentlyEnabled();
     }
+    public void selectDepartments(String departments){
+        String [] depts = departments.split(",");
 
+        List<String> deptCheckboxNameList = new ArrayList<>();
+        for(WebElement e: deptCheckboxes){
+            deptCheckboxNameList.add(e.getText().toLowerCase());
+        }
+        for(int i=0;i<depts.length;i++){
+            if(deptCheckboxNameList.contains(depts[i].toLowerCase())){
+                deptCheckboxes.get(deptCheckboxNameList.indexOf(depts[i].toLowerCase())).click();
+            }
+        }
+
+    }
+
+    public boolean isdisplayResultsDropdownPresent(){
+        return resultsPerPageDropDown.isDisplayed();
+    }
+
+    public String getDefaultPerPage(){
+        String select = new Select(resultsPerPageDropDown).getFirstSelectedOption().getText();
+        return select;
+    }
+
+    public ArrayList<String> getListOfDropDown(){
+        Select select = new Select(resultsPerPageDropDown);
+        List<WebElement> dpOptions = select.getOptions();
+        ArrayList<String> dpOptionsList = new ArrayList<>();
+        for(WebElement e: dpOptions){
+           dpOptionsList.add( e.getText());
+        }
+        return dpOptionsList;
+    }
+
+    public void selectResultsNumbertoDisplay(String resultsPerPage){
+        resultsPerPageDropDown.sendKeys(resultsPerPage);
+    }
+
+    public void clickDeptAccordion(){
+        departmentAccordion.click();
+    }
 }

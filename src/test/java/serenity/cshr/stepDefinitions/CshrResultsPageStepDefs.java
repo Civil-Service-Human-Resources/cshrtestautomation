@@ -11,6 +11,8 @@ public class CshrResultsPageStepDefs {
 
     int totalJobsFound;
     int totalResultsDefined;
+    boolean clickedOnNextPage;
+
     @Steps
     CshrSearchResultsSteps cshrSearchResultsSteps;
 
@@ -25,10 +27,15 @@ public class CshrResultsPageStepDefs {
 
     }
 
-    @Then("^I should see only the results matching \"([^\"]*)\" in \"([^\"]*)\" in a new page$")
-    public void i_should_see_only_the_results_matching_in_in_a_new_page(String keyword, String location) {
-        //Look for location in the html to see if all the locations are filtered according to the search string and compare it against the query
-        cshrSearchResultsSteps.areTheResultsSameAsSearch(keyword,location);
+    @Then("^I should see only the results matching \"([^\"]*)\" in \"([^\"]*)\" and \"([^\"]*)\" with \"([^\"]*)\" and \"([^\"]*)\" in a new page$")
+    public void i_should_see_only_the_results_matching_in_in_a_new_page(String keyword, String location, int radius, Double latitude, Double longitude ) {
+        //Look for location in the html to see if all the locations are filtered according to the search radius string and compare it against the query
+        cshrSearchResultsSteps.areTheResultsSameAsSearch(keyword,location,radius,latitude,longitude);
+    }
+
+    @Then("^I should see only the results matching \"([^\"]*)\" and \"([^\"]*)\" in \"([^\"]*)\" and \"([^\"]*)\" with \"([^\"]*)\" and \"([^\"]*)\"$")
+    public void I_should_see_only_the_results_matching_the_department_matching(String keyword, String department,String location, int radius, Double latitude, Double longitude){
+        cshrSearchResultsSteps.aretheCorrectJobsWithDeptsDisplayed( keyword,department,location,radius,latitude,longitude);
     }
 
     @Then("^include the number of jobs found, partial job description, no of vaccancies, location, salary, job grade, closing date$")
@@ -84,16 +91,27 @@ public class CshrResultsPageStepDefs {
         cshrSearchResultsSteps.verifySearchFiltersIsDisplayed();
     }
 
-    @And("^I enter \"([^\"]*)\" in the keyword and refine$")
+    @And("^I enter \"([^\"]*)\" in the keyword$")
     public void  I_enter_in_the_keyword_and_refine(String newKeyword){
         cshrSearchResultsSteps.enterKeyword(newKeyword);
+    }
+
+    @And("I click update results")
+    public void I_click_refine(){
         cshrSearchResultsSteps.refineResults();
     }
 
     @When("^the results are more than \"([^\"]*)\"$")
-    public void the_results_are_more_than_20(int totalResults){
-         totalJobsFound = Integer.parseInt(cshrSearchResultsSteps.noOfJobsFound());
-         this.totalResultsDefined=totalResults;
+    public void the_results_are_more_than(String totalResults){
+        totalJobsFound = Integer.parseInt(cshrSearchResultsSteps.noOfJobsFound());
+        String strtoint = totalResults.substring(0,2);
+        if(strtoint.contains(" ")){
+            this.totalResultsDefined=Integer.parseInt(strtoint.substring(0,1));
+        }
+        else{
+            this.totalResultsDefined=Integer.parseInt(strtoint);
+        }
+
     }
 
     @Then("^a link to next page is displayed$")
@@ -101,37 +119,57 @@ public class CshrResultsPageStepDefs {
         if(totalJobsFound > totalResultsDefined){
             Assert.assertTrue(cshrSearchResultsSteps.verifyNextIsDisplayed());
         }
-    }
-
-    @Then("^I click on the link to the last page$")
-    public void I_click_on_the_link_to_the_last_page(){
-        if(totalJobsFound > totalResultsDefined) {
-            cshrSearchResultsSteps.navigateToLastPage();
-        }
-    }
-
-    @Then("^a previous link is displayed$")
-    public void a_previous_link_is_displayed(){
-        if(totalJobsFound > totalResultsDefined){
-           Assert.assertTrue(cshrSearchResultsSteps.verifyPrevIsDisplayed());
-        }
-    }
-
-    @Then("^I should see only \"([^\"]*)\" pages listed$")
-    public void I_should_see_only_five_pages_listed(int pages){
-        Assert.assertEquals(pages,cshrSearchResultsSteps.noOfPageNumbersDisplayed());
-    }
-
-    @When("^the results are less than \"([^\"]*)\"$")
-    public void  When_the_results_are_less_than(int jobsResultsNum){
-        totalJobsFound = Integer.parseInt(cshrSearchResultsSteps.noOfJobsFound());
-        this.totalResultsDefined = jobsResultsNum;
-    }
-
-    @When("^a link to next page is not displayed$")
-    public void a_link_to_next_page_is_not_displayed(){
-        if(totalJobsFound<=totalResultsDefined){
+        else{
             Assert.assertFalse(cshrSearchResultsSteps.verifyNextIsDisplayed());
         }
+    }
+
+    @When("^I click on next page$" )
+    public void I_click_on_next_page(){
+        if(totalJobsFound>totalResultsDefined) {
+            cshrSearchResultsSteps.navigateToNext();
+            clickedOnNextPage = true;
+        }
+    }
+
+    @Then("^a link to previous page is displayed$")
+    public void a_link_to_previous_page_is_displayed(){
+        if(clickedOnNextPage == true){
+            cshrSearchResultsSteps.verifyPrevIsDisplayed();
+        }
+    }
+
+    @Then("^a display results per page drop down is displayed with \"([^\"]*)\" and in the list \"([^\"]*)\"$")
+    public void a_display_results_per_page_drop_down_is_displayed_with(String defaultNum, String optionsList){
+        cshrSearchResultsSteps.isDropdownDefault(defaultNum);
+        cshrSearchResultsSteps.listofOptionsInDropDown(optionsList);
+    }
+
+    @And("^The user changes the number of results to display to \"([^\"]*)\"$")
+    public void The_user_changes_the_number_of_results_to_display_to(String resultsPerPage){
+        cshrSearchResultsSteps.selectNoOfResultsToDisplay(resultsPerPage);
+    }
+
+    @And("^I scroll to the bottom of the page$")
+    public void I_scroll_to_the_bottom_of_the_page(){
+        cshrSearchResultsSteps.scrollToBottom();
+    }
+
+    //TODO
+    @When("^I select \"([^\"]*)\" from the sidebar$")
+    public void i_select_department_from_sidebar(String departments){
+        cshrSearchResultsSteps.selectDepartments(departments);
+    }
+
+
+    //TODO
+    @Then("^I verify either a logo or department name is displayed in the job description$")
+    public void I_verify_a_logo_is_displayed_in_the_job_description(){
+
+    }
+
+    @And("^I expand departments accordion$")
+    public void I_expand_departments_accordion(){
+        cshrSearchResultsSteps.expandDeptsAcccordion();
     }
 }
