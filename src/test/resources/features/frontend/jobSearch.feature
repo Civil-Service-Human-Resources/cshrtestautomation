@@ -24,7 +24,7 @@ Feature: Search Results
 
   #CSHRCP-207
 
-  Scenario Outline: Search for valid criteria in both keyword and location and select a job displayed
+  Scenario Outline: Search for valid criteria in both keyword and location and verify jobs displayed are in 30 mile radius and select a job displayed
     When I enter "<keyword>" in job title and "<locationkeyword>" in location
     And I click on search
     Then I should see only the results matching "<keyword>" in "<locationkeyword>" and "<radius>" with "<latitude>" and "<longitude>" in a new page

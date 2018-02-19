@@ -140,6 +140,10 @@ public class CshrSearchResultsSteps {
     }
 
     @Step
+    public void selectRadius(String radius){
+        cshrResultsPage.selectRadiusDropDown(radius);
+    }
+    @Step
     public void selectDepartments(String departments){
         cshrResultsPage.selectDepartments(departments);
     }

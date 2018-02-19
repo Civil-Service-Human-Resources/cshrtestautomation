@@ -168,8 +168,23 @@ public class CshrResultsPageStepDefs {
 
     }
 
+    @And("^I enter new radius \"([^\"]*)\"$")
+    public void I_enter_new_radius(String radius){
+        cshrSearchResultsSteps.selectRadius(radius);
+    }
+
     @And("^I expand departments accordion$")
     public void I_expand_departments_accordion(){
         cshrSearchResultsSteps.expandDeptsAcccordion();
+    }
+
+    @When("^The job is with \"([^\"]*)\" in \"([^\"]*)\" and \"([^\"]*)\" and \"([^\"]*)\" and \"([^\"]*)\" and public opening date is \"([^\"]*)\"" +
+            " and government opening date is \"([^\"]*)\" and internal opening date is \"([^\"]*)\" The job displayed is \"([^\"]*)\"$")
+     public void The_job_public_opening_date_is_and_government_opening_date_is_and_internal_opening_date_is(String keyword, String location, Double latitude, Double longitude, int radius,
+                                                                            String publicOpeningDate,String govOpeningDate,String internalOpeningDate, Boolean isDisplayed){
+            //Count the number of jobs from the database to verify from the front end based on the dates
+            //Select a job from the front end get the job reference id and check the database what dates are in the database and assert
+            cshrSearchResultsSteps.areTheResultsSameAsSearch(keyword,location,radius,latitude,longitude);
+
     }
 }

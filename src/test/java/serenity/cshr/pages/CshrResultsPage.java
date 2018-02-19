@@ -81,6 +81,9 @@ public class CshrResultsPage extends PageObject {
     @FindBy(css ="[aria-controls=\"department-list\"]")
     private WebElement departmentAccordion;
 
+    @FindBy(id="radius")
+    private WebElement radiusDropDown;
+
     public String jobDescriptionExists() {
         return jobDescription.getText();
     }
@@ -235,5 +238,9 @@ public class CshrResultsPage extends PageObject {
 
     public void clickDeptAccordion(){
         departmentAccordion.click();
+    }
+
+    public void selectRadiusDropDown(String radius){
+        radiusDropDown.sendKeys(radius);
     }
 }
