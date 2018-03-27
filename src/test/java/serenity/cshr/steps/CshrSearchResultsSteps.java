@@ -154,6 +154,11 @@ public class CshrSearchResultsSteps {
     }
 
     @Step
+    public void isDropdownPresent(boolean bool){
+        Assert.assertEquals(bool,cshrResultsPage.isdisplayResultsDropdownPresent());
+    }
+
+    @Step
     public void listofOptionsInDropDown(String optionsList){
         List<String> dropDowns = Arrays.asList(optionsList.split(","));
         Assert.assertTrue(dropDowns.equals(cshrResultsPage.getListOfDropDown()));
@@ -169,4 +174,30 @@ public class CshrSearchResultsSteps {
     public void expandDeptsAcccordion(){
         cshrResultsPage.clickDeptAccordion();
     }
+    //TODO
+    @Step
+    public void queryBasedOnDates(String publicOpeningDate,String govOpeningDate,String internalOpeningDate,Boolean isDisplayed){
+
+    }
+
+    @Step
+    public void isAlogoDisplayed(){
+        Assert.assertTrue(cshrResultsPage.isAlogoDisplayed());
+    }
+
+    @Step
+    public void selectMinSalary(String minSal){
+        cshrResultsPage.selectMinsSal( minSal);
+    }
+
+    @Step
+    public void selectMaxSalary(String maxSal){
+        cshrResultsPage.selectMaxSalary(maxSal);
+    }
+
+    @Step
+    public String smartSalary(String maxOrMin){
+       return cshrResultsPage.smartSalryVal(maxOrMin);
+    }
+
 }

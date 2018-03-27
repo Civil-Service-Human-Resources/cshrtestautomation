@@ -84,6 +84,21 @@ public class CshrResultsPage extends PageObject {
     @FindBy(id="radius")
     private WebElement radiusDropDown;
 
+    @FindBy(id="minSalary")
+    private WebElement minmumSal;
+
+    @FindBy(id="maxSalary")
+    private WebElement maximumSal;
+
+    @FindBy(className = "job-search__item-image") //img[src$='.gif']
+    private WebElement logo;
+
+    @FindBy(css="[data-showhide-target-id=\"salary-options\"]")
+    private WebElement salarySelect;
+
+    @FindBy(css="[id^=\"search-result\"][id$=\"-salary\"]")
+    private List<WebElement> displayedSalList;
+
     public String jobDescriptionExists() {
         return jobDescription.getText();
     }
@@ -214,6 +229,7 @@ public class CshrResultsPage extends PageObject {
     }
 
     public boolean isdisplayResultsDropdownPresent(){
+        //System.out.println("the element is displyed+ "+ resultsPerPageDropDown.isDisplayed());
         return resultsPerPageDropDown.isDisplayed();
     }
 
@@ -243,4 +259,56 @@ public class CshrResultsPage extends PageObject {
     public void selectRadiusDropDown(String radius){
         radiusDropDown.sendKeys(radius);
     }
+
+    public boolean isAlogoDisplayed(){
+        if(Integer.parseInt(searchResultsTotalNum())>0){
+            // not a good way of checking if logo is dispalyed but it works for now
+            return logo.isDisplayed();
+        }
+        else{
+            return true;
+        }
+        /*if(logo.getText()!=null){
+            System.out.println("The text for the logo is: "+logo.getText());
+        }*/
+
+    }
+
+    public void salaryExpandOrCollapse(String expandOrcollapse){
+        if((salarySelect.getAttribute("aria-expanded").equals("-1")||salarySelect.getAttribute("aria-expanded").equals("false"))&&expandOrcollapse.equals("expand")){
+            salarySelect.click();
+        }
+        if((!salarySelect.getAttribute("aria-expanded").equals("-1")||!salarySelect.getAttribute("aria-expanded").equals("false"))&&expandOrcollapse.equals("collapse")){
+            salarySelect.click();
+        }
+    }
+
+    public void selectMinsSal(String minSal) {
+        salaryExpandOrCollapse("expand");
+        minmumSal.click();
+        minmumSal.sendKeys(minSal);
+    }
+
+    public void selectMaxSalary(String maxSal){
+        maximumSal.sendKeys(maxSal);
+    }
+
+    public String smartSalryVal(String maxOrMin){
+        if(maxOrMin.equalsIgnoreCase("max")) {
+            Select maxSalSelect = new Select(maximumSal);
+            //maxSelect.getOptions().;
+            System.out.println("The second max salary value is: " + maxSalSelect.getOptions().get(1).getText());
+            return maxSalSelect.getOptions().get(1).getText();
+        }
+        else if(maxOrMin.equalsIgnoreCase("min")){
+            Select minSalSelect = new Select(minmumSal);
+            System.out.println("The last min salary value is: " + minSalSelect.getOptions().get(minSalSelect.getOptions().size()-1).getText());
+            return minSalSelect.getOptions().get(minSalSelect.getOptions().size()-1).getText();
+        }
+        else{
+            return null;
+        }
+
+    }
+
 }

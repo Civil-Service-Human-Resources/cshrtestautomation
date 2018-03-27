@@ -33,6 +33,12 @@ public class CshrResultsPageStepDefs {
         cshrSearchResultsSteps.areTheResultsSameAsSearch(keyword,location,radius,latitude,longitude);
     }
 
+    @Then("^I should see only the results matching \"([^\"]*)\" in \"([^\"]*)\" and \"([^\"]*)\" with \"([^\"]*)\" and \"([^\"]*)\" or \"([^\"]*)\" or overseas locations in a new page$")
+    public void  I_should_see_only_the_results_matching_keyword_location_radius_latitude_longitude_regions_or_overseas_locations_in_a_new_page(
+            String keyword, String location, int radius, Double latitude, Double longitude, String region){
+        cshrSearchResultsSteps.areTheResultsSameAsSearch(keyword,location,radius,latitude,longitude);
+    }
+
     @Then("^I should see only the results matching \"([^\"]*)\" and \"([^\"]*)\" in \"([^\"]*)\" and \"([^\"]*)\" with \"([^\"]*)\" and \"([^\"]*)\"$")
     public void I_should_see_only_the_results_matching_the_department_matching(String keyword, String department,String location, int radius, Double latitude, Double longitude){
         cshrSearchResultsSteps.aretheCorrectJobsWithDeptsDisplayed( keyword,department,location,radius,latitude,longitude);
@@ -145,6 +151,11 @@ public class CshrResultsPageStepDefs {
         cshrSearchResultsSteps.listofOptionsInDropDown(optionsList);
     }
 
+    @Then("^A display results per page drop down is displayed \"([^\"]*)\"$")
+    public void a_display_results_per_page_drop_down_is_displayed(Boolean bool){
+         cshrSearchResultsSteps.isDropdownPresent(bool);
+    }
+
     @And("^The user changes the number of results to display to \"([^\"]*)\"$")
     public void The_user_changes_the_number_of_results_to_display_to(String resultsPerPage){
         cshrSearchResultsSteps.selectNoOfResultsToDisplay(resultsPerPage);
@@ -155,17 +166,14 @@ public class CshrResultsPageStepDefs {
         cshrSearchResultsSteps.scrollToBottom();
     }
 
-    //TODO
     @When("^I select \"([^\"]*)\" from the sidebar$")
     public void i_select_department_from_sidebar(String departments){
         cshrSearchResultsSteps.selectDepartments(departments);
     }
 
-
-    //TODO
     @Then("^I verify either a logo or department name is displayed in the job description$")
     public void I_verify_a_logo_is_displayed_in_the_job_description(){
-
+        cshrSearchResultsSteps.isAlogoDisplayed();
     }
 
     @And("^I enter new radius \"([^\"]*)\"$")
@@ -178,13 +186,33 @@ public class CshrResultsPageStepDefs {
         cshrSearchResultsSteps.expandDeptsAcccordion();
     }
 
+    //TODO
     @When("^The job is with \"([^\"]*)\" in \"([^\"]*)\" and \"([^\"]*)\" and \"([^\"]*)\" and \"([^\"]*)\" and public opening date is \"([^\"]*)\"" +
             " and government opening date is \"([^\"]*)\" and internal opening date is \"([^\"]*)\" The job displayed is \"([^\"]*)\"$")
      public void The_job_public_opening_date_is_and_government_opening_date_is_and_internal_opening_date_is(String keyword, String location, Double latitude, Double longitude, int radius,
                                                                             String publicOpeningDate,String govOpeningDate,String internalOpeningDate, Boolean isDisplayed){
             //Count the number of jobs from the database to verify from the front end based on the dates
             //Select a job from the front end get the job reference id and check the database what dates are in the database and assert
+           //This needs a proper test data
             cshrSearchResultsSteps.areTheResultsSameAsSearch(keyword,location,radius,latitude,longitude);
+           //What to verify, backend already says only jobs that have public opening date > now are displayed Is this for the future when internal jobs are provided
+            cshrSearchResultsSteps.queryBasedOnDates(publicOpeningDate,govOpeningDate,internalOpeningDate,isDisplayed);
 
+    }
+
+    @When("^I filter jobs based on salary bands \"([^\"]*)\" and \"([^\"]*)\"$")
+    public void i_filter_jobs_based_on_salary_bands_min_max(String minSal, String maxSal){
+        cshrSearchResultsSteps.selectMinSalary(minSal);
+        cshrSearchResultsSteps.selectMaxSalary(maxSal);
+    }
+
+    @When("^Salary values in \"([^\"]*)\" should start from next range$")
+    public void Salary_values_in_max_should_start_from_next_range(int maxSal){
+
+    }
+
+    @Then("^The salary \"([^\"]*)\" starts at \"([^\"]*)\"$")
+    public void The_salary_starts_at(String salType, String nextVal){
+        Assert.assertEquals(cshrSearchResultsSteps.smartSalary(salType),nextVal);
     }
 }

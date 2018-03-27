@@ -1,3 +1,4 @@
+@intest
 Feature:In order to filter jobs from departments
 
   Background:
@@ -19,14 +20,14 @@ Feature:In order to filter jobs from departments
     |web    |BS1 6NB      |Department for works and pensions,HM Revenue and Customs,Ministry of Defence|soldier|51.449572| -2.592711| 50   |
     |       |london       |Department for works and pensions,HM Revenue and Customs,Ministry of Defence|       |51.518043|-0.109374 | 30   |
 
-  #At the moment not verifying logos, not sure whether the same name as department is displayed
+  #At the moment not verifying logos
   Scenario Outline: Department logos are displayed
       When I enter "<keyword>" in job title and "<locationkeyword>" in location
       And I click on search
       Then I verify either a logo or department name is displayed in the job description
   Examples:
     |keyword|locationkeyword|
-    |       |               |
+    |  web  |    newcastle  |
 
   Scenario Outline: To check if the jobs that have public, government, internal opening dates display appropriately in the frontend
    When I enter "<keyword>" in job title and "<locationkeyword>" in location

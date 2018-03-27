@@ -9,6 +9,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 @DefaultUrl("http://localhost:3000/")
 public class CshrHomePage extends PageObject {
     public CshrHomePage(WebDriver driver) {
@@ -46,6 +48,7 @@ public class CshrHomePage extends PageObject {
         if(!getDriver().toString().contains("appium")) {
             getDriver().manage().window().fullscreen();
         }
+        getDriver().manage().timeouts().pageLoadTimeout(5,SECONDS);
     }
 
     public void searchForKeyword(String searchRequest) {
@@ -78,7 +81,7 @@ public class CshrHomePage extends PageObject {
     }
 
     public String getErrorSummaryMessage(){
-        summaryErrorMessageTitle.getText();
+        //summaryErrorMessageTitle.getText();
         if(inLineLocationError.getText().equals(errorSummaryList.getText())){
             return errorSummaryList.getText();
         }
