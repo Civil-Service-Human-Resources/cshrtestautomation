@@ -115,10 +115,10 @@ public class CshrSearchResultsSteps {
         return cshrResultsPage.isprevDisplayed();
     }
     @Step
-    public void areTheResultsSameAsSearch(String keyword,String location, int radius,Double latitude, Double longitude ){
+    public void areTheResultsSameAsSearch(String keyword,String location, int radius,Double latitude, Double longitude,String regions,Boolean overseas ){
         try {
             dbUtils = new DBUtils();
-            keywordAndLocationCount= dbUtils.countSearchByKeywordAndLocation(keyword, location,radius, latitude,longitude);
+            keywordAndLocationCount= dbUtils.countSearchByKeywordAndLocation(keyword, location,radius, latitude,longitude,regions,overseas);
             Assert.assertEquals(keywordAndLocationCount,Integer.parseInt(cshrResultsPage.searchResultsTotalNum()));
         }
         catch (SQLException e){
@@ -127,10 +127,10 @@ public class CshrSearchResultsSteps {
     }
 
     @Step
-    public void aretheCorrectJobsWithDeptsDisplayed(String keyword, String department,String location, int radius, Double latitude, Double longitude ){
+    public void aretheCorrectJobsWithDeptsDisplayed(String keyword, String location, int radius, Double latitude, Double longitude,String regions,Boolean overseas,String department ){
         try {
             dbUtils = new DBUtils();
-            keywordDeptAndLocationCount= dbUtils.countSearchByKeywordDeptAndLocation(keyword, department, location,radius, latitude,longitude);
+            keywordDeptAndLocationCount= dbUtils.countSearchByKeywordDeptAndLocation(keyword,location,radius, latitude,longitude, regions, overseas,department);
             Assert.assertEquals(keywordDeptAndLocationCount,Integer.parseInt(cshrResultsPage.searchResultsTotalNum()));
         }
         catch (SQLException e){
@@ -174,10 +174,18 @@ public class CshrSearchResultsSteps {
     public void expandDeptsAcccordion(){
         cshrResultsPage.clickDeptAccordion();
     }
-    //TODO
-    @Step
-    public void queryBasedOnDates(String publicOpeningDate,String govOpeningDate,String internalOpeningDate,Boolean isDisplayed){
 
+    @Step
+    public void queryBasedOnDates(String keyword,String location,int radius,Double latitude,Double longitude,String regions,
+                                  Boolean overseas,String publicOpeningDate,String govOpeningDate,String internalOpeningDate,Boolean isDisplayed){
+        try {
+            dbUtils = new DBUtils();
+            dbUtils.countForSelectingBasedOnOpeningDates(keyword,location,radius, latitude,longitude, regions, overseas,
+                                                        publicOpeningDate, govOpeningDate, internalOpeningDate);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Step

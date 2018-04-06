@@ -11,12 +11,62 @@ public class DBUtils {
     private static Connection conn = null;
 
     private String selectDepartmentId = "select id from departments where name ilike ?; ";
-    private String sqlForLocationSearchWithLongLatAndRadiusCount = "select count(*) FROM vacancies WHERE public_opening_date IS NOT NULL AND public_opening_date <= now() " +
-                                                                    "AND (point(?, ?) <@> point(longitude, latitude)) <= ? and CONCAT(title, ' ', description,' ',eligibility) ILIKE ?" +
-                                                                    "and closing_date >= now();";
-    private String sqlForLocationDeptFilterWithLongitudeAndLatitude = "select count(*) FROM vacancies WHERE public_opening_date IS NOT NULL AND public_opening_date <= now() " +
-                                                                    "AND (point(?, ?) <@> point(longitude, latitude)) <= ? and CONCAT(title, ' ', description,' ',eligibility) ILIKE ?" +
-                                                                    "and closing_date >= now() And dept_id in";
+    private String sqlForLocationSearchWithLongLatAndRadiusCount = "select count(distinct v.id) FROM vacancies v join vacancylocations vl on v.id=vl.vacancyid " +
+            "WHERE v.public_opening_date IS NOT NULL AND v.public_opening_date <= now() " +
+            "And closing_date >= now() and CONCAT(title, ' ', description,' ',eligibility) ILIKE ? AND ((point(?, ?) <@> point(longitude, latitude)) <= ? " +
+            " or v.overseasjob = ? or v.regions ilike (?))";
+    private String sqlForLocationDeptFilterWithLongitudeAndLatitude = "select count(distinct v.id) FROM vacancies v join vacancylocations vl on v.id=vl.vacancyid " +
+            "WHERE v.public_opening_date IS NOT NULL AND v.public_opening_date <= now() " +
+            "And closing_date >= now() and CONCAT(title, ' ', description,' ',eligibility) ILIKE ? AND ((point(?, ?) <@> point(longitude, latitude)) <= ? " +
+            " or v.overseasjob = ? or v.regions ilike (?)) And dept_id in";
+
+    private String sqlForSelectingBasedOnGovIntPublicOpeningDates1 = " and v.government_opening_date ";
+    private String sqlForSelectingBasedOnGovIntPublicOpeningDates2=       " and v.internal_opening_date " ;
+    private String sqlForSelectingBasedOnGovIntPublicOpeningDates3=        " and v.public_opening_date ";
+
+    public int  countForSelectingBasedOnOpeningDates(String keyword,String location,int radius, Double latitude,Double longitude,
+                                                     String regions, Boolean overseas,String publicOpeningDate,String govOpeningDate,String internalOpeningDate ) throws SQLException{
+        String pastOrFururePub =null;
+        String pastOrFutureGov =null;
+        String pastOrFutureInt =null;
+        switch(publicOpeningDate){
+            case "past"  : pastOrFururePub = "<now()";
+            break;
+            case "future":pastOrFururePub = ">=now()";
+            break;
+        }
+        switch(govOpeningDate){
+            case "past"  : pastOrFutureGov = "<now()";
+            break;
+            case "future":pastOrFutureGov = ">=now()";
+            break;
+        }
+        switch(internalOpeningDate){
+            case "past"  : pastOrFutureInt = "<now()";
+            break;
+            case "future":pastOrFutureInt = ">=now()";
+            break;
+        }
+        connectToDataBase();
+        StringBuilder query = new StringBuilder();
+        query.append(sqlForSelectingBasedOnGovIntPublicOpeningDates1).append(pastOrFutureGov)
+                .append(sqlForSelectingBasedOnGovIntPublicOpeningDates2).append(pastOrFutureInt)
+                .append(sqlForSelectingBasedOnGovIntPublicOpeningDates3).append(pastOrFururePub);
+        PreparedStatement preStatement = conn.prepareStatement(sqlForLocationSearchWithLongLatAndRadiusCount+query.toString());
+        preStatement.setDouble(2,longitude);
+        preStatement.setDouble(3,latitude);
+        preStatement.setInt(4,radius);
+        preStatement.setString(1,"%"+keyword+"%");
+        preStatement.setBoolean(5,overseas);
+        preStatement.setString(6,"%"+regions+"%");
+        System.out.println("The preparedstmnt is: "+ preStatement);
+        ResultSet rs = preStatement.executeQuery();
+        rs.next();
+        int count = rs.getInt(1);
+        preStatement.close();
+        conn.close();
+        return count;
+    }
 
     public static Connection connectToDataBase() throws SQLException {
         try {
@@ -32,25 +82,27 @@ public class DBUtils {
     }
 
 
-    public  int countSearchByKeywordAndLocation(String keyword, String location, int radius,Double latitude, Double longitude) throws SQLException {
+    public  int countSearchByKeywordAndLocation(String keyword, String location, int radius,Double latitude, Double longitude,String regions,Boolean overseas) throws SQLException {
         connectToDataBase();
         PreparedStatement preStatement = conn.prepareStatement(sqlForLocationSearchWithLongLatAndRadiusCount);
-        preStatement.setDouble(1,longitude);
-        preStatement.setDouble(2,latitude);
-        preStatement.setInt(3,radius);
-        preStatement.setString(4,"%"+keyword+"%");
+        preStatement.setDouble(2,longitude);
+        preStatement.setDouble(3,latitude);
+        preStatement.setInt(4,radius);
+        preStatement.setString(1,"%"+keyword+"%");
+        preStatement.setBoolean(5,overseas);
+        preStatement.setString(6,"%"+regions+"%");
         ResultSet rs = preStatement.executeQuery();
         rs.next();
         int count = rs.getInt(1);
         preStatement.close();
+        conn.close();
         return count;
     }
 
-    public int countSearchByKeywordDeptAndLocation(String keyword, String department,String location, int radius, Double latitude, Double longitude) throws SQLException{
+    public int countSearchByKeywordDeptAndLocation(String keyword, String location, int radius, Double latitude, Double longitude,String regions,Boolean overseas,String department) throws SQLException{
         connectToDataBase();
 
         ArrayList<Integer> items= this.getDepartmentId(department);
-
         StringBuilder query = new StringBuilder();
         query.append(sqlForLocationDeptFilterWithLongitudeAndLatitude).append("(");
         for(int i=0;i<items.size();i++){
@@ -61,20 +113,22 @@ public class DBUtils {
             }
         }
         PreparedStatement preparedStatement = conn.prepareStatement(query.toString());
-        preparedStatement.setDouble(1,longitude);
-        preparedStatement.setDouble(2,latitude);
-        preparedStatement.setInt(3,radius);
-        preparedStatement.setString(4,"%"+keyword+"%");
+        preparedStatement.setDouble(2,longitude);
+        preparedStatement.setDouble(3,latitude);
+        preparedStatement.setInt(4,radius);
+        preparedStatement.setString(1,"%"+keyword+"%");
+        preparedStatement.setBoolean(5,overseas);
+        preparedStatement.setString(6,"%"+regions+"%");
         System.out.println(preparedStatement);
         ResultSet rs = preparedStatement.executeQuery();
         rs.next();
         int count = rs.getInt(1);
         preparedStatement.close();
-        System.out.println("count : "+ count);
+        conn.close();
         return count;
     }
 
-    public ArrayList<Integer> getDepartmentId(String department) throws SQLException{
+    private ArrayList<Integer> getDepartmentId(String department) throws SQLException{
 
         List<String> items= new ArrayList<>();
 
@@ -97,4 +151,5 @@ public class DBUtils {
         }
         return convertedDeptIds;
     }
+
 }

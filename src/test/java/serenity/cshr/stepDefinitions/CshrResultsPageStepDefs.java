@@ -27,21 +27,16 @@ public class CshrResultsPageStepDefs {
 
     }
 
-    @Then("^I should see only the results matching \"([^\"]*)\" in \"([^\"]*)\" and \"([^\"]*)\" with \"([^\"]*)\" and \"([^\"]*)\" in a new page$")
-    public void i_should_see_only_the_results_matching_in_in_a_new_page(String keyword, String location, int radius, Double latitude, Double longitude ) {
+    @Then("^I should see only the results matching \"([^\"]*)\" in \"([^\"]*)\" and \"([^\"]*)\" with \"([^\"]*)\" and \"([^\"]*)\" or \"([^\"]*)\" or \"([^\"]*)\" locations in a new page$")
+    public void i_should_see_only_the_results_matching_in_in_a_new_page(String keyword, String location, int radius, Double latitude, Double longitude,String regions, Boolean overseas ) {
         //Look for location in the html to see if all the locations are filtered according to the search radius string and compare it against the query
-        cshrSearchResultsSteps.areTheResultsSameAsSearch(keyword,location,radius,latitude,longitude);
+        cshrSearchResultsSteps.areTheResultsSameAsSearch(keyword,location,radius,latitude,longitude,regions,overseas);
     }
 
-    @Then("^I should see only the results matching \"([^\"]*)\" in \"([^\"]*)\" and \"([^\"]*)\" with \"([^\"]*)\" and \"([^\"]*)\" or \"([^\"]*)\" or overseas locations in a new page$")
-    public void  I_should_see_only_the_results_matching_keyword_location_radius_latitude_longitude_regions_or_overseas_locations_in_a_new_page(
-            String keyword, String location, int radius, Double latitude, Double longitude, String region){
-        cshrSearchResultsSteps.areTheResultsSameAsSearch(keyword,location,radius,latitude,longitude);
-    }
-
-    @Then("^I should see only the results matching \"([^\"]*)\" and \"([^\"]*)\" in \"([^\"]*)\" and \"([^\"]*)\" with \"([^\"]*)\" and \"([^\"]*)\"$")
-    public void I_should_see_only_the_results_matching_the_department_matching(String keyword, String department,String location, int radius, Double latitude, Double longitude){
-        cshrSearchResultsSteps.aretheCorrectJobsWithDeptsDisplayed( keyword,department,location,radius,latitude,longitude);
+    @Then("^I should see only the results matching \"([^\"]*)\" in \"([^\"]*)\" and \"([^\"]*)\" with \"([^\"]*)\" and \"([^\"]*)\" or \"([^\"]*)\" or \"([^\"]*)\" locations and departmentid \"([^\"]*)\" in a new page$")
+    public void i_should_see_only_the_results_matching_with_Dept_in_in_a_new_page(String keyword, String location, int radius, Double latitude, Double longitude,String regions, Boolean overseas,String departments ) {
+        //Look for location in the html to see if all the locations are filtered according to the search radius string and compare it against the query
+        cshrSearchResultsSteps.aretheCorrectJobsWithDeptsDisplayed(keyword,location,radius,latitude,longitude,regions,overseas,departments);
     }
 
     @Then("^include the number of jobs found, partial job description, no of vaccancies, location, salary, job grade, closing date$")
@@ -186,18 +181,18 @@ public class CshrResultsPageStepDefs {
         cshrSearchResultsSteps.expandDeptsAcccordion();
     }
 
-    //TODO
-    @When("^The job is with \"([^\"]*)\" in \"([^\"]*)\" and \"([^\"]*)\" and \"([^\"]*)\" and \"([^\"]*)\" and public opening date is \"([^\"]*)\"" +
+
+    @When("^The job is with \"([^\"]*)\" in \"([^\"]*)\" and \"([^\"]*)\" and \"([^\"]*)\" and \"([^\"]*)\" or \"([^\"]*)\" or \"([^\"]*)\" and public opening date is \"([^\"]*)\"" +
             " and government opening date is \"([^\"]*)\" and internal opening date is \"([^\"]*)\" The job displayed is \"([^\"]*)\"$")
-     public void The_job_public_opening_date_is_and_government_opening_date_is_and_internal_opening_date_is(String keyword, String location, Double latitude, Double longitude, int radius,
+     public void The_job_public_opening_date_is_and_government_opening_date_is_and_internal_opening_date_is(String keyword,
+                                                                            String location, int radius,Double latitude, Double longitude,String regions,Boolean overseas,
                                                                             String publicOpeningDate,String govOpeningDate,String internalOpeningDate, Boolean isDisplayed){
             //Count the number of jobs from the database to verify from the front end based on the dates
             //Select a job from the front end get the job reference id and check the database what dates are in the database and assert
            //This needs a proper test data
-            cshrSearchResultsSteps.areTheResultsSameAsSearch(keyword,location,radius,latitude,longitude);
+            //cshrSearchResultsSteps.areTheResultsSameAsSearch(keyword,location,radius,latitude,longitude);
            //What to verify, backend already says only jobs that have public opening date > now are displayed Is this for the future when internal jobs are provided
-            cshrSearchResultsSteps.queryBasedOnDates(publicOpeningDate,govOpeningDate,internalOpeningDate,isDisplayed);
-
+            cshrSearchResultsSteps.queryBasedOnDates(keyword,location,radius,latitude,longitude,regions,overseas,publicOpeningDate,govOpeningDate,internalOpeningDate,isDisplayed);
     }
 
     @When("^I filter jobs based on salary bands \"([^\"]*)\" and \"([^\"]*)\"$")

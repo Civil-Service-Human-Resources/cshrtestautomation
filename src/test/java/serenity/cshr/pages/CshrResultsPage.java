@@ -1,6 +1,7 @@
 package serenity.cshr.pages;
 
 import net.serenitybdd.core.pages.PageObject;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -33,7 +34,7 @@ public class CshrResultsPage extends PageObject {
     @FindBy(id = "search-results-total")
     private WebElement searchResultsTotal;
 
-    @FindBy(linkText = "please try a new search")
+    @FindBy(linkText = "search again")
     private WebElement tryNewSearchLink;
 
     @FindBy(xpath = "//li[contains(@id,'-numvacancies')]/span")
@@ -90,7 +91,7 @@ public class CshrResultsPage extends PageObject {
     @FindBy(id="maxSalary")
     private WebElement maximumSal;
 
-    @FindBy(className = "job-search__item-image") //img[src$='.gif']
+    @FindBy(css = ".job-search__item-image img") //img[src$='.gif']
     private WebElement logo;
 
     @FindBy(css="[data-showhide-target-id=\"salary-options\"]")
@@ -229,8 +230,12 @@ public class CshrResultsPage extends PageObject {
     }
 
     public boolean isdisplayResultsDropdownPresent(){
-        //System.out.println("the element is displyed+ "+ resultsPerPageDropDown.isDisplayed());
-        return resultsPerPageDropDown.isDisplayed();
+        try{
+            return resultsPerPageDropDown.isDisplayed();
+        }
+        catch(NoSuchElementException e){
+            return false;
+        }
     }
 
     public String getDefaultPerPage(){
@@ -261,17 +266,14 @@ public class CshrResultsPage extends PageObject {
     }
 
     public boolean isAlogoDisplayed(){
-        if(Integer.parseInt(searchResultsTotalNum())>0){
-            // not a good way of checking if logo is dispalyed but it works for now
-            return logo.isDisplayed();
-        }
-        else{
-            return true;
-        }
-        /*if(logo.getText()!=null){
-            System.out.println("The text for the logo is: "+logo.getText());
-        }*/
 
+            if (Integer.parseInt(searchResultsTotalNum()) > 0) {
+                if (!logo.getAttribute("src").isEmpty()) ;
+                return true;
+            } else {
+                // no point in returning false if there are no results
+                return true;
+            }
     }
 
     public void salaryExpandOrCollapse(String expandOrcollapse){
@@ -296,13 +298,10 @@ public class CshrResultsPage extends PageObject {
     public String smartSalryVal(String maxOrMin){
         if(maxOrMin.equalsIgnoreCase("max")) {
             Select maxSalSelect = new Select(maximumSal);
-            //maxSelect.getOptions().;
-            System.out.println("The second max salary value is: " + maxSalSelect.getOptions().get(1).getText());
             return maxSalSelect.getOptions().get(1).getText();
         }
         else if(maxOrMin.equalsIgnoreCase("min")){
             Select minSalSelect = new Select(minmumSal);
-            System.out.println("The last min salary value is: " + minSalSelect.getOptions().get(minSalSelect.getOptions().size()-1).getText());
             return minSalSelect.getOptions().get(minSalSelect.getOptions().size()-1).getText();
         }
         else{
