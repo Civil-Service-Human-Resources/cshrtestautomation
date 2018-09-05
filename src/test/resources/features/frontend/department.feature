@@ -1,4 +1,3 @@
-@intest
 Feature:In order to filter jobs based on departments
 
   Background:
@@ -6,18 +5,29 @@ Feature:In order to filter jobs based on departments
     Then I should see homepage with options to search for location and keyword
 
   Scenario Outline:Search for jobs in a specific location either with or without keyword and Only results for the departments that I select are displayed
-    When I enter "<keyword>" in job title and "<locationkeyword>" in location
+    When I enter <keyword> in job title and <locationkeyword> in location
     And I click on search
-    When I enter "<newKeyword>" in the keyword
-    And I enter new radius "<radius>"
+    When I enter <newKeyword> in the keyword
+    And I enter new radius <radius>
     And I expand departments accordion
-    When I select "<departments>" from the sidebar
+    When I enter <departments> in the departmentbox
     And I click update results
-    Then I should see only the results matching "<newKeyword>" in "<locationkeyword>" and "<radius>" with "<latitude>" and "<longitude>" or "<regions>" or "<overseas>" locations and departmentid "<departments>" in a new page
+    #Then I should see only the results matching "<newKeyword>" in "<locationkeyword>" and "<radius>" with "<latitude>" and "<longitude>" or "<regions>" or "<overseas>" locations and departmentid "<departments>" in a new page
     Examples:
     |keyword|locationkeyword|departments                        |newKeyword|latitude |longitude           |radius|regions|overseas|
-    |web    |SW1Y           |Department for Work and Pensions    |          |51.518043|-0.109374         | 30    |      |  true  |
-    |medical    |BS1 6NB    |Animal and Plant Health Agency,HM Revenue and Customs,Ministry of Defence|animal|51.449572| -2.592711| 50   ||true|
+    |program    |SA1           |Driver and Vehicle Licensing Agency    |          |51.518043|-0.109374         | 30    |      |  true  |
+    |customer    |NN1 2TA    |Ministry of Housing, Communities & Local Government||51.449572| -2.592711| 50   ||true|
+
+  Scenario Outline: Overseas jobs are not displayed when I untick overseas option
+      When I enter "<keyword>" in job title and "<locationkeyword>" in location
+      And I click on search
+      When I select overseas "<overseas>" flag
+      And I enter new radius "<radius>"
+      And I click on search
+      Then I should see only the results matching "<keyword>" in "<locationkeyword>" and "<radius>" with "<latitude>" and "<longitude>" or "<regions>" or "<overseas>" locations in a new page
+    Examples:
+        |keyword|locationkeyword  |latitude |longitude    |radius|regions|overseas|
+        |we    |SW1Y             |51.518043|-0.109374    | 30    |Greater London      |  false  |
 
   Scenario Outline: Department logos are displayed
       When I enter "<keyword>" in job title and "<locationkeyword>" in location

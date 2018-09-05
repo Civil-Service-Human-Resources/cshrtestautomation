@@ -73,6 +73,9 @@ public class CshrResultsPage extends PageObject {
     @FindBy(css =".form-multicheckbox__item")
     private List<WebElement> deptCheckboxes;
 
+    @FindBy(id = "depts")
+    private WebElement deptTypeIn;
+
     @FindBy(id= "dept-1")
     private WebElement deptt;
 
@@ -99,6 +102,9 @@ public class CshrResultsPage extends PageObject {
 
     @FindBy(css="[id^=\"search-result\"][id$=\"-salary\"]")
     private List<WebElement> displayedSalList;
+
+    @FindBy(css="[for=\"overseas\"]")
+    private WebElement overseasflag;
 
     public String jobDescriptionExists() {
         return jobDescription.getText();
@@ -188,46 +194,30 @@ public class CshrResultsPage extends PageObject {
         nextLink.click();
     }
 
-   /* public int noOfPageLinks(){
-        return currentPageList.size();
-    }*/
-    public void clickRefine(){
+     public void clickRefine(){
         updateResults.click();
     }
 
-    public void clearKeyword(){
-        element(keyword).clear();
-    }
 
     public void isSearchFiltersDisplayed(){
         element(searchFilters).isDisplayed();
     }
 
-    public void enterKeyword(String newKeyword){
-        element(keyword).type(newKeyword);
-    }
-
-    public boolean isNextDisplayed(){
+  public boolean isNextDisplayed(){
        return element(nextLink).isCurrentlyEnabled();
     }
 
     public boolean isprevDisplayed(){
         return element(prevLink).isCurrentlyEnabled();
     }
-    public void selectDepartments(String departments){
-        String [] depts = departments.split(",");
 
-        List<String> deptCheckboxNameList = new ArrayList<>();
-        for(WebElement e: deptCheckboxes){
-            deptCheckboxNameList.add(e.getText().toLowerCase());
-        }
-        for(int i=0;i<depts.length;i++){
-            if(deptCheckboxNameList.contains(depts[i].toLowerCase())){
-                deptCheckboxes.get(deptCheckboxNameList.indexOf(depts[i].toLowerCase())).click();
-            }
-        }
+    public void typeIntoDepartments(String departments){
+
+            deptTypeIn.click();
+            deptTypeIn.sendKeys(departments);
 
     }
+
 
     public boolean isdisplayResultsDropdownPresent(){
         try{
@@ -259,6 +249,11 @@ public class CshrResultsPage extends PageObject {
 
     public void clickDeptAccordion(){
         departmentAccordion.click();
+    }
+
+    public void selectOrUnselectOverseas(String flag){
+       // System.out.println("The overseas flag is : "+overseasflag.getAttribute("data-checked"));
+        overseasflag.click();
     }
 
     public void selectRadiusDropDown(String radius){

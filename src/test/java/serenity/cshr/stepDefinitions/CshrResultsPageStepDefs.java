@@ -22,11 +22,6 @@ public class CshrResultsPageStepDefs {
         cshrSearchResultsSteps.verifyJobDescriptionExists();
     }
 
-    @Then("^I should see all the results matching \"([^\"]*)\" in a new page$")
-    public void i_should_see_all_the_results_matching_in_a_new_page(String arg1) {
-
-    }
-
     @Then("^I should see only the results matching \"([^\"]*)\" in \"([^\"]*)\" and \"([^\"]*)\" with \"([^\"]*)\" and \"([^\"]*)\" or \"([^\"]*)\" or \"([^\"]*)\" locations in a new page$")
     public void i_should_see_only_the_results_matching_in_in_a_new_page(String keyword, String location, int radius, Double latitude, Double longitude,String regions, Boolean overseas ) {
         //Look for location in the html to see if all the locations are filtered according to the search radius string and compare it against the query
@@ -82,17 +77,17 @@ public class CshrResultsPageStepDefs {
         cshrSearchResultsSteps.clickTryNewSeachLink();
     }
 
-    @When("^I clear existing search text in keyword$")
+    /*@When("^I clear existing search text in keyword$")
     public void Iclear_existing_search_text_in_keyword(){
         cshrSearchResultsSteps.clearExistingKeyword();
-    }
+    }*/
 
     @When("^I should see search filters displayed in search results page$")
     public void I_should_see_search_filters_displayed_in_search_results_page(){
         cshrSearchResultsSteps.verifySearchFiltersIsDisplayed();
     }
 
-    @And("^I enter \"([^\"]*)\" in the keyword$")
+    @And("^I enter (.*) in the keyword$")
     public void  I_enter_in_the_keyword_and_refine(String newKeyword){
         cshrSearchResultsSteps.enterKeyword(newKeyword);
     }
@@ -161,9 +156,14 @@ public class CshrResultsPageStepDefs {
         cshrSearchResultsSteps.scrollToBottom();
     }
 
-    @When("^I select \"([^\"]*)\" from the sidebar$")
+    /*@When("^I select \"([^\"]*)\" from the sidebar$")
     public void i_select_department_from_sidebar(String departments){
         cshrSearchResultsSteps.selectDepartments(departments);
+    }*/
+
+    @When("I enter (.*) in the departmentbox")
+    public void when_I_enter_departments_inthe_box(String departments){
+        cshrSearchResultsSteps.enterDepts(departments);
     }
 
     @Then("^I verify either a logo or department name is displayed in the job description$")
@@ -171,9 +171,14 @@ public class CshrResultsPageStepDefs {
         cshrSearchResultsSteps.isAlogoDisplayed();
     }
 
-    @And("^I enter new radius \"([^\"]*)\"$")
+    @And("^I enter new radius (.*)$")
     public void I_enter_new_radius(String radius){
         cshrSearchResultsSteps.selectRadius(radius);
+    }
+
+    @When("^I select overseas \"([^\"]*)\" flag$")
+    public void I_select_overseas_flag(String flag){
+        cshrSearchResultsSteps.selectOverseas(flag);
     }
 
     @And("^I expand departments accordion$")

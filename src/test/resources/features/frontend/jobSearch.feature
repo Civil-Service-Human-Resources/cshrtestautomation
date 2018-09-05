@@ -1,4 +1,3 @@
-@intest
 Feature: Search Results
   As a job seeker
   In order to find a role relevant to me
@@ -7,31 +6,38 @@ Feature: Search Results
   Background:
     Given I open cshr website
     Then I should see homepage with options to search for location and keyword
-   #CSHRCP-207
-   Scenario Outline: Search with invalid criteria without a location and check if error is displayed both on the home page and results page
-             When I enter "<keyword>" in job title and "<locationkeyword>" in location
-             And I click on search
-             Then I should see an error message "<message>"
-             And I enter "<keyword>" in job title and "<newlocationkeyword>" in location
-             And I click on search
-             And I enter "<keyword>" in job title and "<locationkeyword>" in location
-             And I click update results
-             Then I should see an error message "<message>"
+
+  Scenario Outline: Verify that the keyword and location are both optional on the results page
+    When I enter either keyword "<keyword>" or location "<locationkeyword>"
+    Then I should see all the results matching "<keyword>" in a new page
+    When I enter "<keyword>" as keyword or "<location>" location on the search results page
+    And I click update results
+    Then I should see all the results matching "<keyword>" in a new page
+
     Examples:
-    |keyword         |locationkeyword|message|newlocationkeyword|
-    |medical         |               |You need to enter a location|bristol|
-    |                |               |You need to enter a location|london|
+      |keyword        |locationkeyword|
+      |  driver       | bristol       |
+      |               | bs1           |
+      |  driver       | bs1           |
+
+   Scenario Outline: Verify that the keyword and location are both optional on the homepage
+             When I enter either keyword "<keyword>" or location "<locationkeyword>"
+             And I click on search
+             Then I should see search results
+    Examples:
+    |keyword         |locationkeyword|
+    |director        |     bristol   |
+    |               |               |
+    |  director     |               |
 
   #CSHRCP-207
-  Scenario Outline: Search for valid criteria in both keyword and location and verify jobs displayed are in 30 mile radius and select a job displayed
-    When I enter "<keyword>" in job title and "<locationkeyword>" in location
+  Scenario Outline: Search for valid criteria in both keyword and location and verify jobs displayed are in 30 mile radius
+    When I enter keyword in job title and locationKeyword in location
     And I click on search
     Then I should see only the results matching "<keyword>" in "<locationkeyword>" and "<radius>" with "<latitude>" and "<longitude>" or "<regions>" or "<overseas>" locations in a new page
     And total number of jobs matching search
     And partial job description
     And number of vaccancies, location, salary, job grade, closing date
-    When I select a job that matches my criteria
-    Then I should be shown a full description of the job in a new page with salary min and max, closing date, Apply
     Examples:
       | keyword          | locationkeyword |latitude  |longitude |radius|regions             |overseas|
       |                  | london          |51.518043 |-0.109374 | 30   | greater london     |true|
@@ -80,10 +86,8 @@ Feature: Search Results
     When I enter "<keyword>" in job title and "<locationkeyword>" in location
     And I click on search
     And I should see search filters displayed in search results page
-    And I clear existing search text in keyword
     When I enter "<newKeyword>" in the keyword
     And I click update results
-  #  Then I should see only the results matching "<newKeyword>" in "<locationkeyword>" and "<radius>" with "<latitude>" and "<longitude>" in a new page
     Examples:
       | keyword | locationkeyword |newKeyword|latitude|longitude|radius|
       | web     | london          | technical|51.518043 |-0.109374| 30  |
@@ -117,13 +121,4 @@ Feature: Search Results
     Examples:
       | keyword | locationkeyword |latitude |longitude|radius|default|dopdownlist|results to show|
       |  web    | london          |51.518043|-0.109374|30    |10 per page| 5 per page,10 per page,25 per page,50 per page  |50 per page|
-
-    #CSHRCP-208, #CSHRCP-209
-  #Scenario: A cookies page and privacy page are present
-  #  Then I verify that privacy policy is present in the footer
-  #  When I click privacy policy
-  #  Then I should be taken to privacy policy page
-  #  And  I verify that cookies link is present in the footer
-  #  When I click cookies link
-  #  Then I should be taken to cookies page
 

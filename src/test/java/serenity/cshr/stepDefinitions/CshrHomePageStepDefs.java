@@ -28,31 +28,24 @@ public class CshrHomePageStepDefs {
         cshrHomePageSteps.enterSearchKeyWord(searchKeyword);
     }
 
-    //TODO
-    @When("^I enter \"([^\"]*)\" in location$")
-    public void i_enter_in_location_and_click_search(String location) {
-    }
 
     @When("^I click on search$")
     public void i_click_on_search(){
         cshrHomePageSteps.clickSearch();
     }
 
-    @When("^I enter \"([^\"]*)\" in job title and \"([^\"]*)\" in location$")
+    @When("^I enter (.*) in job title and (.*) in location$")
     public void i_enter_in_job_title_and_in_location_and_click_search(String keyword, String location) {
         cshrHomePageSteps.enterSearchKeyWordAndLocation(keyword, location);
     }
 
-
-
+   /* I enter either keyword "<keyword>" or location "<locationkeyword>"
+    public void i_enter_in_job_title_and_in_location_and_click_search(String keyword, String location) {
+        cshrHomePageSteps.enterSearchKeyWordAndLocation(keyword, location);
+    }*/
     @Then("^I should see a link to welsh language$")
     public void I_should_see_a_link_to_welsh_language(){
         cshrHomePageSteps.welshLanguageLinkCheck();
-    }
-
-    @When("^I should see an error message \"([^\"]*)\"$")
-    public void I_should_see_an_error_message(String message){
-        Assert.assertEquals(message, cshrHomePageSteps.verifyErrorMessageIsShown());
     }
 
 }

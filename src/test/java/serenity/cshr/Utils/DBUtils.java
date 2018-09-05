@@ -11,14 +11,24 @@ public class DBUtils {
     private static Connection conn = null;
 
     private String selectDepartmentId = "select id from departments where name ilike ?; ";
-    private String sqlForLocationSearchWithLongLatAndRadiusCount = "select count(distinct v.id) FROM vacancies v join vacancylocations vl on v.id=vl.vacancyid " +
+   /* private String sqlForLocationSearchWithLongLatAndRadiusCount = "select count(distinct v.id) FROM vacancies v join vacancylocations vl on v.id=vl.vacancyid " +
             "WHERE v.public_opening_date IS NOT NULL AND v.public_opening_date <= now() " +
             "And closing_date >= now() and CONCAT(title, ' ', description,' ',eligibility) ILIKE ? AND ((point(?, ?) <@> point(longitude, latitude)) <= ? " +
-            " or v.overseasjob = ? or v.regions ilike (?))";
-    private String sqlForLocationDeptFilterWithLongitudeAndLatitude = "select count(distinct v.id) FROM vacancies v join vacancylocations vl on v.id=vl.vacancyid " +
+            " or v.overseasjob = ? or v.regions ilike (?))";*/
+
+   private String sqlForLocationSearchWithLongLatAndRadiusCount = "select count(distinct v.id) FROM vacancies v join vacancylocations vl on v.id=vl.vacancyid " +
+            "where point(?,?) <@> point(vl.longitude, vl.latitude) <= ?" +
+           "and v.overseasjob=? and CONCAT(title, ' ', description,' ',eligibility) ILIKE ?" +
+           "and v.public_opening_date IS NOT NULL AND v.public_opening_date <= now() And closing_date >= now() or v.regions ilike (?)" +
+           ";";
+    /*private String sqlForLocationDeptFilterWithLongitudeAndLatitude = "select count(distinct v.id) FROM vacancies v join vacancylocations vl on v.id=vl.vacancyid " +
             "WHERE v.public_opening_date IS NOT NULL AND v.public_opening_date <= now() " +
             "And closing_date >= now() and CONCAT(title, ' ', description,' ',eligibility) ILIKE ? AND ((point(?, ?) <@> point(longitude, latitude)) <= ? " +
             " or v.overseasjob = ? or v.regions ilike (?)) And dept_id in";
+ */   private String sqlForLocationDeptFilterWithLongitudeAndLatitude = "select count(distinct v.id) FROM vacancies v join vacancylocations vl on v.id=vl.vacancyid " +
+            "where point(?, ?) <@> point(vl.longitude, vl.latitude) <= ?" +
+            "and v.overseasjob=? and CONCAT(title, ' ', description,' ',eligibility) ILIKE ?" +
+            "and v.dept_id in(90,38) and v.public_opening_date IS NOT NULL AND v.public_opening_date <= now() And closing_date >= now() or v.regions ilike ('%South West%');";
 
     private String sqlForSelectingBasedOnGovIntPublicOpeningDates1 = " and v.government_opening_date ";
     private String sqlForSelectingBasedOnGovIntPublicOpeningDates2=       " and v.internal_opening_date " ;
@@ -53,11 +63,11 @@ public class DBUtils {
                 .append(sqlForSelectingBasedOnGovIntPublicOpeningDates2).append(pastOrFutureInt)
                 .append(sqlForSelectingBasedOnGovIntPublicOpeningDates3).append(pastOrFururePub);
         PreparedStatement preStatement = conn.prepareStatement(sqlForLocationSearchWithLongLatAndRadiusCount+query.toString());
-        preStatement.setDouble(2,longitude);
-        preStatement.setDouble(3,latitude);
-        preStatement.setInt(4,radius);
-        preStatement.setString(1,"%"+keyword+"%");
-        preStatement.setBoolean(5,overseas);
+        preStatement.setDouble(1,longitude);
+        preStatement.setDouble(2,latitude);
+        preStatement.setInt(3,radius);
+        preStatement.setString(5,"%"+keyword+"%");
+        preStatement.setBoolean(4,overseas);
         preStatement.setString(6,"%"+regions+"%");
         System.out.println("The preparedstmnt is: "+ preStatement);
         ResultSet rs = preStatement.executeQuery();
@@ -85,12 +95,13 @@ public class DBUtils {
     public  int countSearchByKeywordAndLocation(String keyword, String location, int radius,Double latitude, Double longitude,String regions,Boolean overseas) throws SQLException {
         connectToDataBase();
         PreparedStatement preStatement = conn.prepareStatement(sqlForLocationSearchWithLongLatAndRadiusCount);
-        preStatement.setDouble(2,longitude);
-        preStatement.setDouble(3,latitude);
-        preStatement.setInt(4,radius);
-        preStatement.setString(1,"%"+keyword+"%");
-        preStatement.setBoolean(5,overseas);
+        preStatement.setDouble(1,longitude);
+        preStatement.setDouble(2,latitude);
+        preStatement.setInt(3,radius);
+        preStatement.setString(5,"%"+keyword+"%");
+        preStatement.setBoolean(4,overseas);
         preStatement.setString(6,"%"+regions+"%");
+        System.out.println("The verify sql stmnt is: "+preStatement);
         ResultSet rs = preStatement.executeQuery();
         rs.next();
         int count = rs.getInt(1);

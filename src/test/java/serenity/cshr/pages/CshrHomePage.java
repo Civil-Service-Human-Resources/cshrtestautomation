@@ -11,7 +11,7 @@ import org.openqa.selenium.support.FindBy;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-@DefaultUrl("http://localhost:3000/")
+@DefaultUrl("http://test:test@localhost:3000/")
 public class CshrHomePage extends PageObject {
     public CshrHomePage(WebDriver driver) {
         super(driver);
@@ -22,7 +22,7 @@ public class CshrHomePage extends PageObject {
     @FindBy(id = "keyword")
     private WebElement keyword;
 
-    @FindBy(id = "location")
+    @FindBy(name = "location")
     private WebElement location;
 
     @FindBy(linkText = "Cymraeg")
@@ -51,10 +51,9 @@ public class CshrHomePage extends PageObject {
         getDriver().manage().timeouts().pageLoadTimeout(5,SECONDS);
     }
 
-    public void searchForKeyword(String searchRequest) {
+    public void searchForKeyword(String searchRequest){
         element(keyword).clear();
-        element(keyword).type(searchRequest);
-
+        element(keyword).waitUntilVisible().type(searchRequest);
     }
 
     public void searchForLocation(String searchLocation) {

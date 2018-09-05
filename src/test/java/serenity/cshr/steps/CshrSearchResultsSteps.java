@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 
 public class CshrSearchResultsSteps {
     private CshrResultsPage cshrResultsPage;
+    private CshrHomePage cshrHomePage;
     private DBUtils dbUtils;
     private int keywordAndLocationCount;
     private int keywordDeptAndLocationCount;
@@ -77,10 +78,10 @@ public class CshrSearchResultsSteps {
         cshrResultsPage.tryNewSeach();
     }
 
-    @Step
+   /* @Step
     public void clearExistingKeyword(){
         cshrResultsPage.clearKeyword();
-    }
+    }*/
     @Step
     public void verifySearchFiltersIsDisplayed(){
         cshrResultsPage.isSearchFiltersDisplayed();
@@ -88,7 +89,7 @@ public class CshrSearchResultsSteps {
 
     @Step
     public void enterKeyword(String newKeyword){
-        cshrResultsPage.enterKeyword(newKeyword);
+        cshrHomePage.searchForKeyword(newKeyword);
     }
 
     @Step
@@ -143,10 +144,22 @@ public class CshrSearchResultsSteps {
     public void selectRadius(String radius){
         cshrResultsPage.selectRadiusDropDown(radius);
     }
+
     @Step
+    public void selectOverseas(String flag){
+        cshrResultsPage.selectOrUnselectOverseas(flag);
+    }
+
+    /*@Step
     public void selectDepartments(String departments){
         cshrResultsPage.selectDepartments(departments);
+    }*/
+
+    @Step
+    public void enterDepts(String departments){
+        cshrResultsPage.typeIntoDepartments(departments);
     }
+
     @Step
     public void isDropdownDefault(String defaultNum){
         Assert.assertTrue(cshrResultsPage.isdisplayResultsDropdownPresent());

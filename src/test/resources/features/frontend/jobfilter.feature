@@ -24,4 +24,4 @@ Feature: As a candidate I want to fitler jobs based on salary
     Examples:
       |keyword         |locationkeyword |minSal     |maxSal |nextVal  |salType|comment|
       |business analyst|    london     | £10,000   |        |£20,000  | max   |should see all jobs equal to and greater than 10000|
-      |business analyst|    london     |           |£50,000 |£40,000  | min    |should see all jobs equal to and between 10000 and 20000|
+     # |business analyst|    london     |           |£50,000 |£40,000  | min    |should see all jobs equal to and between 10000 and 20000|
